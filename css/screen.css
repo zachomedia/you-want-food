@@ -1,0 +1,376 @@
+/*
+    Copyright (c) 2014 Zachary Seguin
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+*/
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #444;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: black;
+}
+
+ul {
+    list-style: square;
+}
+
+p, li {
+    line-height: 22px;
+}
+
+a {
+    color: #aa0000;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/** HEADER **/
+#site-header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    
+    overflow: hidden;
+
+    height: 75px;
+    
+    background: #333;
+    border-bottom: 1px solid #ddd;
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3);
+}
+
+    #site-header h1 {
+        color: white;
+        margin-left: 50px;
+        
+        margin-top: 20px;
+        margin-bottom: none;
+        padding: 0;
+
+        font-size: 25px;
+
+        float: left;
+    }
+
+        #site-header h1 a {
+            border: none;
+            outline: none;
+
+            float: left;
+        }
+
+        #site-header h1 img {
+            margin-top: -10px;
+        }
+   
+    #links {
+        float: right;
+
+        margin-top: 25px;
+        margin-right: 50px;
+    }
+
+        #links ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            overflow: hidden;
+        }
+
+            #links ul li {
+                float: left;
+                margin-left: 10px;
+            }
+
+            #links ul li a {
+                background: #e3e3e3;
+                color: #333;
+
+                display: block;
+
+                padding: 4px 10px;
+                border-radius: 4px;
+
+                font-size: 10pt;
+            }
+
+            #links ul li a:hover {
+                text-decoration: none;
+                background: white;
+            }
+
+/** LOCATIONS LIST **/
+#outlets-list {
+    position: fixed;
+    top: 75px;
+    left: 0px;
+    bottom: 0px;
+    
+    width: 250px;
+    
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    
+    /* background: #f3f3f3; */
+    border-right: 1px solid #eee;
+}
+
+    #outlets-list input[type=search] {
+        width: 230px;
+        margin: 10px;
+    }
+
+    #outlets-list ul {
+        list-style: none;
+        
+        margin: 0;
+        padding: 0;
+    }
+    
+        #outlets-list ul li {
+            margin: 0;
+            padding: 10px;
+            
+            border-top: 1px solid #eee;
+            border-left: 5px solid #333;
+            
+            overflow: hidden;
+        }
+
+        #outlets-list ul li.selected {
+            background: #f3f3f3;
+            font-weight: bold;
+        }
+
+        #outlets-list ul li.open {
+            border-left-color: #00aa00;
+        }
+        
+        #outlets-list ul li.closed {
+            border-left-color: #aa0000;
+        }
+        
+        #outlets-list ul li.first {
+           /* border-top: none; */
+        }
+        
+            #outlets-list ul li a {
+                color: #222;
+                text-decoration: none;
+            }
+            
+            #outlets-list ul li .outlet_name {
+                display: block;
+                /*font-weight: bold;*/
+                font-size: 14px;
+            }
+
+/** DETAILS VIEW **/
+#details-view {
+    position: fixed;
+    top: 75px;
+    left: 250px;
+    right: 0px;
+    bottom: 30px;
+    
+    padding: 40px;
+    
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/** DETAILS VIEW - OUTLET **/
+h1 {
+    text-transform: uppercase;
+}
+
+img {
+    max-height: 125px;
+}
+
+.notice {
+    background: #333;
+    color: white;
+    
+    padding: 10px;
+    border-radius: 8px;
+}
+
+    .notice h3 {
+        color: white;
+        margin: 0;
+    }
+    
+    .notice p {
+        margin: 0;
+    }
+
+.outlet_hours {
+    
+}
+
+    .outlet_hours > div {
+        float: left;
+        
+        display: inline-block;
+        width: 350px;
+    }
+
+    .outlet_hours table th {
+        text-align: right;
+        padding-right: 10px;
+
+        border-bottom: 1px solid #eee;
+    }
+
+    .outlet_hours table tr.header {
+        /* background: #333; */
+        /* color: white; */
+        text-align: center;
+    }
+
+    .outlet_hours table tr.header th {
+        padding: 4px 8px;
+        border-bottom: 2px solid #333;
+    }
+
+    .outlet_hours table td {
+        width: 50px;
+        text-align: center;
+
+        border-bottom: 1px solid #eee;
+    }
+
+    .outlet_hours table td.today, .outlet_hours table th.today {
+        background: #f3f3f3;
+    }
+
+    .outlet_hours table tr.last td, .outlet_hours table tr.last th {
+        border-bottom: none !important;
+    }
+    
+.outlet_menu {
+    overflow: hidden;
+    clear: both;
+}
+
+    .outlet_menu_day {
+        float: left;
+        width: 300px;
+
+        margin: 0 10px;
+        padding: 10px;
+    }
+
+    .outlet_menu_day.today {
+        background: #f3f3f3;
+        border-radius: 8px;
+    }
+    
+    .outlet_menu .diet_type {
+        display: block;
+        font-size: 11px;
+    }
+
+/** FOOTER **/
+#site-footer {
+    position: fixed;
+    bottom: 0px;
+    left: 250px;
+    right: 0px;
+
+    height: 30px;
+
+    font-size: 12px;
+    color: #aaa;
+
+    border-top: 1px solid #eee;
+}
+
+#site-footer a {
+    color: #777;
+    text-decoration: none;
+}
+
+#site-footer a:hover {
+    color: #555;
+}
+
+#site-footer p {
+    margin: 0;
+    margin-top: 5px;
+    padding: 1px 5px;
+
+    text-align: center;
+    line-height: 14px;
+}
+
+/** EMAIL SUBSCRIBE FORM **/
+#email-subscribe-form, #email-unsubscribe-form {
+    
+}
+
+    form article {
+        padding: 4px;
+        margin: 4px;
+    }
+
+    form label {
+        display: block;
+        font-weight: bold;
+    }
+
+    form label::after {
+        content: ':';
+    }
+
+    form input {
+        -webkit-appearance: none;
+        outline: none;
+
+        width: 97%;
+        padding: 6px;
+
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        font-size: 10pt;
+    }
+
+    form input::focus {
+        border-color: #333;
+    }
+
+    form input[type=submit] {
+        background: #333;
+        color: white;
+        
+        border: 1px solid black;
+        border-radius: 4px;
+
+        cursor: pointer;
+        width: 100%;
+    }
