@@ -34,7 +34,7 @@ function sendEmail($to, $contents)
 }// End of sendEmail function
 
 // generateMenuHTML($menu) Generates the HTML for the $menu.
-function sendMenuEmail($to, $menu)
+function generateMenuHTML($menu)
 {
     $email = '';
 
