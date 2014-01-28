@@ -1,5 +1,7 @@
 # You Want Food
 
+https://zacharyseguin.ca/projects/you-want-food/
+
 A web application for displaying information about Food Services provided by the [University of Waterloo Open Data API](http://api.uwaterloo.ca).
 
 ## Configuration
