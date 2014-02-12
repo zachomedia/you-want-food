@@ -54,7 +54,7 @@ THE SOFTWARE.
                 <input type="search" ng-model="filter" placeholder="Search..." />
                 <ul>
                     <li ng-repeat="outlet in outlets|orderBy:'outlet_name'|filter:filter" ng-class="{open: outlet.is_open_now, closed: !outlet.is_open_now, first: $first, selected: outlet.is_selected}">
-                        <a href="#/outlet/{{outlets.indexOf(outlet)}}">
+                        <a href="#/outlet/{{outlet.outlet_id}}">
                             <span class="outlet_name">{{outlet.outlet_name}}</span>
                         </a>
                     </li>

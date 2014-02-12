@@ -27,7 +27,7 @@ angular
     // Configure the routing for the application.
     .config(function ($routeProvider) {
         $routeProvider
-            .when('/outlet/:index', {
+            .when('/outlet/:outlet_id', {
                 // Load Single Location
                 templateUrl: 'views/outlet.html',
                 controller: 'Outlet'
@@ -110,17 +110,24 @@ angular
     // =================
     // Displays information about an outlet.
     .controller('Outlet', function ($scope, $routeParams, $http, $location) {
-        if (!$scope.outlets[$routeParams.index]) { $location.path('/'); }
-        
         $scope.today = new Date();
         $scope.weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        $scope.outlet = $scope.outlets[$routeParams.index];
+        $scope.outlet = null;
 
         // Handle selection
-        for ($outlet in $scope.outlets)
-            $scope.outlets[$outlet].is_selected = false;
+        for (var index in $scope.outlets) {
+            var outlet = $scope.outlets[index];
+            
+            outlet.is_selected = outlet.outlet_id == $routeParams.outlet_id;
+            
+            if (outlet.outlet_id == $routeParams.outlet_id) {
+               $scope.outlet = outlet;
+            }// End of if
+         }// End of for
 
-        $scope.outlet.is_selected = true;
+        if ($scope.outlet == null) {
+           $location.path('/');
+        }
 
         // Convert hours into an array, fixing a sorting issue.
         if (!($scope.outlet.opening_hours instanceof Array)) {
