@@ -30,6 +30,7 @@ require 'config.php';
 // sendEmail($to, $contents) Sends an HTML email to $to with the contents $contents
 function sendEmail($to, $contents)
 {
+    global $config;
     return mail($to, "Daily Menu: You Want Food", $contents, "From: " . $config['FROM_EMAIL'] . "\r\nContent-Type: text/html\r\n");
 }// End of sendEmail function
 
