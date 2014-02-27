@@ -1,5 +1,6 @@
 <img ng-src="{{outlet.logo}}" ng-hide="{{!outlet.logo}}" />
-<h1>{{outlet.outlet_name}}</h1>
+<h1 ng-hide="outlet.outlet_name == null">{{outlet.outlet_name}}</h1>
+<h1 ng-show="outlet.outlet_name == null">Name Unavailable</h1>
 
 <p class="outlet_location">Located in {{outlet.building}}.</p>
 <p class="outlet_description" ng-bind-html="outlet.description"></p>
