@@ -99,7 +99,7 @@ function generateMenuHTML($outlets, $menu)
                 $email .= "<div style='font-size: .8em; padding: 0px; color: #555;'>";
                     if (isset($outlet_info['notice']))
                     {
-                        $email .= "<p style='font-weight: blod;'>" . $outlet_info['notice'] . "</p>";
+                        $email .= "<p style='font-weight: bold;'>" . $outlet_info['notice'] . "</p>";
                     }// End of if
 
                     $email .= "<p>";
