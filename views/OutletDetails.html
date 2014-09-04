@@ -1,29 +1,38 @@
-<img ng-src="{{outlet.logo}}" ng-hide="{{!outlet.logo}}" />
-<h1 ng-hide="outlet.outlet_name == null">{{outlet.outlet_name}}</h1>
-<h1 ng-show="outlet.outlet_name == null">Name Unavailable</h1>
+<h1 ng-hide="outlet.outlet_name == null" class="title">{{outlet.outlet_name}}</h1>
+<h1 ng-show="outlet.outlet_name == null" class="title">Name Unavailable</h1>
 
-<p class="outlet_location">Located in {{outlet.building}}.</p>
-<p class="outlet_description" ng-bind-html="outlet.description"></p>
+<p class="outlet-logo"><img ng-src="{{outlet.logo}}" ng-hide="!outlet.logo" /></p>
 
-<section class="outlet_notice notice" ng-hide="{{!outlet.notice}}">
+<p class="outlet-location">Located in {{outlet.building}}.</p>
+<p class="outlet-description" ng-bind-html="outlet.description"></p>
+
+<section class="outlet-notice notice" ng-hide="!outlet.notice">
     <h3>NOTICE</h3>
     <p ng-bind-html="outlet.notice"></p>
 </section>
 
 <h2>Hours of Operation</h2>
-<section class="outlet_hours">
+<section class="outlet-hours">
     <div>
         <h3>Standard Hours</h3>
         <table cellspacing="0">
-            <tr class="header"><th>Week Day</th><th>Open</th><th>Close</th></tr>
-            <tr ng-repeat="hours in outlet.opening_hours|orderBy:'order'" ng-class="{last: $last}">
-                <th ng-class="{ today: hours.weekday.toLowerCase() == weekdays[today.getDay()] }">{{hours.weekday}}</th>
-                <td ng-class="{ today: hours.weekday.toLowerCase() == weekdays[today.getDay()] }">{{hours.opening_hour || "-"}}</td>
-                <td ng-class="{ today: hours.weekday.toLowerCase() == weekdays[today.getDay()] }">{{hours.closing_hour || "-"}}</td>
-            </tr>
+            <thead>
+                <tr class="header">
+                    <th>Week Day</th>
+                    <th>Open</th>
+                    <th>Close</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="weekday in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']|orderBy:'order'" ng-class="{last: $last, today: isToday($index) }">
+                    <th>{{weekday}}</th>
+                    <td>{{outlet.opening_hours[weekday].opening_hour || "&mdash;"}}</td>
+                    <td>{{outlet.opening_hours[weekday].closing_hour || "&mdash;"}}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
-    
+
     <div ng-show="outlet.special_hours[0]">
         <h3>Special Hours</h3>
         <ul>
@@ -32,7 +41,7 @@
             </li>
         </ul>
     </div>
-    
+
     <div ng-show="outlet.dates_closed[0]">
         <h3>Dates Closed</h3>
         <ul>
@@ -41,13 +50,13 @@
     </div>
 </section>
 
-<section class="outlet_menu">
+<section class="outlet-menu">
     <h2 ng-show="outlet.menu[0]">Menu</h2>
     <article class="outlet_menu_day" ng-repeat="day in outlet.menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">
         <h3>{{day.day}}</h3>
         <article class="outlet_menu_meal" ng-repeat="meal in day.meals|orderBy:'order'">
             <h4>{{meal.name}}</h4>
-            
+
             <ul>
                 <li ng-repeat="item in meal.items">{{item.product_name}} <span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
                 <p ng-hide="meal.items.length">No menu information</p>

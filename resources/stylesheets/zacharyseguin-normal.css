@@ -1,0 +1,115 @@
+/*
+   The MIT License (MIT)
+
+   Copyright (c) 2014 Zachary Seguin
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+*/
+
+/* Generic Styles */
+body {
+   font-size: 16px;
+}
+
+/* Header */
+#header-container {
+
+}
+
+   #header-container header {
+      width: 960px;
+      margin: 0 auto;
+   }
+
+      #header-container header img {
+         height: 50px;
+      }
+
+/* Navigation */
+#navigation-container {
+
+}
+
+      #navigation-container #navigation-wrapper {
+         width: 960px;
+         margin: 0 auto;
+         padding: 0 10px;
+
+         font-size: 0.9em;
+         overflow: hidden;
+      }
+
+      #navigation-container ul {
+         line-height: 20px;
+         padding: 10px 0;
+      }
+
+         #navigation-container ul li {
+            float: left;
+            padding: 0 6px;
+            border-right: 1px solid #aaa;
+
+            color: #555;
+         }
+
+         #navigation-container ul li.title {
+            font-weight: 400;
+         }
+
+         #navigation-container ul li:last-child {
+            border-right: none;
+         }
+
+            #navigation-container ul li a {
+               text-decoration: none;
+               color: #555;
+            }
+
+      #navigation-container nav ul {
+         float: left;
+      }
+
+      #navigation-container menu ul {
+         float: right;
+      }
+
+/* Content */
+#content-container {
+
+}
+
+   #content-container #content {
+      width: 960px;
+      margin: 0 auto;
+
+      padding: 20px;
+   }
+
+/* Footer */
+#footer-container {
+
+}
+
+   #footer-container footer {
+      width: 960px;
+      margin: 0 auto;
+
+      font-size: 0.85em;
+      line-height: 1.4em;
+   }

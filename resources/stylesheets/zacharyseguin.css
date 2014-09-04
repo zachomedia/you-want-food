@@ -1,0 +1,263 @@
+/*
+   The MIT License (MIT)
+
+   Copyright (c) 2014 Zachary Seguin
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+*/
+
+/* Import Required Styles */
+@import url("reset.css");
+@import url("zacharyseguin-normal.css"); /* TO BE RESPONSIVE */
+@import url("//fonts.googleapis.com/css?family=Roboto:100,300,400");
+
+/* Generic Styles */
+body {
+   background: white;
+
+   font-family: 'Roboto', sans-serif;
+   font-weight: 300;
+}
+
+a {
+   outline: none;
+   border: none;
+
+   color: #aa0000;
+   text-decoration: none;
+}
+
+a:hover {
+   color: #880000;
+}
+
+   a img {
+      outline: none;
+      border: none;
+   }
+
+h1, h2, h3, h4, h5, h6 {
+   font-weight: 300;
+}
+
+hr {
+   border: 1px solid #eee;
+   background: #eee;
+}
+
+em, b {
+   font-weight: 400;
+}
+
+.small {
+   font-size: 0.9em;
+}
+
+/* Header */
+#header-container {
+   background: #545454;
+   border-bottom: 1px solid #222;
+}
+
+   #header-container header {
+
+   }
+
+      #header-container header img {
+
+      }
+
+/* Navigation */
+#navigation-container {
+   background: #eee;
+   border-bottom: 1px solid #aaa;
+}
+
+   #navigation-container #navigation-wrapper {
+
+   }
+
+/* Banners */
+.banner {
+   background: #f3f3f3;
+   border: 1px solid #ddd;
+   padding: 10px;
+   font-size: 0.9em;
+}
+
+/* Content */
+#content-container {
+
+}
+
+   #content-container #content {
+      line-height: 1.45em;
+      color: #555;
+      overflow: hidden;
+   }
+
+   #content-container #content h1,
+   #content-container #content h2,
+   #content-container #content h3,
+   #content-container #content h4,
+   #content-container #content h5,
+   #content-container #content h6 {
+      padding: 8px 4px;
+   }
+
+   #content-container #content h1 {
+      font-size: 30px;
+      padding: 8px 4px;
+      line-height: 34px;
+   }
+
+   #content-container #content h1.title {
+      border-bottom: 2px solid #eee;
+      font-size: 35px;
+      font-weight: 100;
+      margin-bottom: 5px;
+      padding: 15px 8px;
+   }
+
+   #content-container #content h2 {
+      font-size: 22px;
+   }
+
+   #content-container #content h3 {
+      font-size: 20px;
+   }
+
+   #content-container #content h4 {
+      font-size: 18px;
+   }
+
+   #content-container #content h5 {
+      font-size: 16px;
+   }
+
+   #content-container #content h6 {
+      font-size: 14px;
+   }
+
+   #content-container #content p {
+      padding: 10px;
+      line-height: 1.5em;
+   }
+
+   #content-container #content header h1 {
+      background: #eee;
+      padding: 5px 10px;
+      font-size: 32px;
+      font-weight: 100;
+      line-height: 35px;
+   }
+
+   #content-container #content table {
+      width: 100%;
+   }
+
+      #content-container #content table thead {
+         border-bottom: 1px solid #ddd;
+      }
+
+         #content-container #content table thead th, #content-container #content table thead td {
+            font-weight: 400;
+            padding: 5px 0;
+         }
+
+      #content-container #content table tbody tr {
+         border-bottom: 1px solid #eee;
+      }
+
+         #content-container #content table tbody tr th {
+            font-weight: 400;
+            text-align: left;
+            padding: 5px 0;
+         }
+
+         #content-container #content table tbody tr td {
+            text-align: left;
+            padding: 5px 0;
+         }
+
+   #content-container #content ul, #content-container #content ol {
+      margin-left: 25px;
+      padding: 10px 5px;
+   }
+
+   #content-container #content ul {
+      list-style: square;
+   }
+
+   #content-container #content ol {
+      list-style: decimal;
+   }
+
+   #content-container #content dl {
+      padding: 10px 5px;
+   }
+
+      #content-container #content dl dt {
+         font-weight: 400;
+         margin-top: 10px;
+      }
+
+   #content-container #content .master {
+      float: left;
+      width: 250px;
+      margin-right: 10px;
+
+      border: 1px solid #eee;
+
+      font-size: 0.9em;
+      line-height: 1.1em;
+   }
+
+   #content-container #content .detail {
+      float: left;
+      width: 660px;
+   }
+
+/* Footer */
+#footer-container {
+   margin: 20px 0;
+}
+
+   #footer-container footer {
+      text-align: center;
+      color: #aaa;
+      border-top: 2px solid #eee;
+      padding-top: 10px;
+   }
+
+/* Alert Info */
+#content-container #content .selected a {
+   color: inherit;
+}
+
+#content-container #content .alert-meta {
+   font-size: 0.9em;
+   line-height: 1.3em;
+   color: #888;
+}
+
+   #content-container #content .alert-meta p {
+      padding: 4px;
+      margin: 0;
+   }

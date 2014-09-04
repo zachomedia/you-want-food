@@ -1,72 +1,125 @@
 <!doctype html>
-
 <!--
+    The MIT License (MIT)
 
-Copyright (c) 2014 Zachary Seguin
+    Copyright (c) 2014 Zachary Seguin
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
 -->
+<html lang="en" ng-app="YouWantFood">
+   <head>
+      <!-- Meta Information -->
+      <meta charset="utf-8" />
 
-<html ng-app="FoodServices">
-    <head>
-        <meta charset="utf-8" />
-        <title>You Want Food</title>
-        
-        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700'>
-        <link rel="stylesheet" href="css/screen.css">
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js"></script>
-        <script src="js/controllers.js"></script>
-    </head>
-    <body>
-        
-        <header id="site-header">
-        <h1><a href="https://zacharyseguin.ca/"><img src="https://zacharyseguin.ca/images/logo.png" alt="Zachary Seguin" height="50px" /></a> | You Want Food</h1>
+      <!-- Site/Page Information -->
+      <title>You Want Food &ndash; Zachary Seguin</title>
 
-            <div id="links">
-                <ul>
-                    <li><a href="#/email-subscribe">Receive Daily Menu Emails</a></li>
-                </ul>
-            </div>
-        </header>
-            
-        <div id="outlets" ng-controller="Outlets">
-            <section id="outlets-list">
-                <input type="search" ng-model="filter" placeholder="Search..." />
-                <ul>
-                    <li ng-repeat="outlet in outlets|orderBy:'outlet_name'|filter:filter" ng-class="{open: outlet.is_open_now, closed: !outlet.is_open_now, first: $first, selected: outlet.is_selected}">
-                        <a href="#/outlet/{{outlet.outlet_id}}">
-                            <span class="outlet_name" ng-hide="outlet.outlet_name == null">{{outlet.outlet_name}}</span>
-                            <span class="outlet_name" ng-show="outlet.outlet_name == null">Name Unavailable</span>
-                        </a>
-                    </li>
-                </ul>
+      <link rel="icon" href="https://zacharyseguin.ca/favicon.png" />
+
+      <link href="https://zacharyseguin.ca/images/apple-touch-icon.png" rel="apple-touch-icon" />
+      <link href="https://zacharyseguin.ca/images/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+      <link href="https://zacharyseguin.ca/images/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+      <link href="https://zacharyseguin.ca/images/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+
+      <!-- Stylesheets -->
+      <link rel="stylesheet" href="resources/stylesheets/reset.css" />
+      <link rel="stylesheet" href="resources/stylesheets/zacharyseguin.css" />
+      <link rel="stylesheet" href="resources/stylesheets/you-want-food.css" />
+
+      <!-- IE 8 and below -->
+      <!--[if lt IE 9]>
+         <script src="resources/javascript/html5shiv.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <!-- Header -->
+      <div id="header-container">
+         <header>
+            <a href="https://zacharyseguin.ca/"><img src="https://zacharyseguin.ca/images/logo.png" alt="Zachary Seguin" /></a>
+         </header>
+      </div><!-- End of header-container -->
+
+      <!-- Navigation -->
+      <div id="navigation-container">
+         <div id="navigation-wrapper">
+            <!-- Left/Primary navigation -->
+            <nav>
+               <ul>
+                  <li class="title">You Want Food</li>
+               </ul>
+               <ul>
+                  <li><a href="#/">Home</a></li>
+                  <li><a href="#/about">About</a></li>
+               </ul>
+            </nav>
+
+            <!-- Right/Secondary navigation -->
+            <menu>
+               <ul>
+                  <li><a href="#/email-subsribe">Email Subscribe</a></li>
+               </ul>
+            </menu>
+         </div> <!-- End of navigation-wrapper -->
+      </div><!-- End of navigation-container -->
+
+      <!-- Content -->
+      <div id="content-container">
+         <div id="content">
+
+            <section class="master" ng-controller="Outlets">
+               <h1 class="title">Outlets</h1>
+
+               <input type="search" ng-model="filter" placeholder="Search Outlets..." id="outlets-filter" />
+               <ul class="outlets-list">
+                   <li ng-repeat="outlet in outlets|orderBy:'outlet_name'|filter:filter" ng-class="{open: outlet.is_open_now, closed: !outlet.is_open_now, first: $first, selected: isSelectedOutlet(outlet.outlet_id)}">
+                       <a href="#/outlet/{{outlet.outlet_id}}">
+                           <span class="outlet_name" ng-hide="outlet.outlet_name == null">{{outlet.outlet_name}}</span>
+                           <span class="outlet_name" ng-show="outlet.outlet_name == null">Name Unavailable</span>
+                       </a>
+                   </li>
+               </ul>
             </section>
-            
-            <section id="details-view" ng-view></section>
-        </div>
 
-        <footer id="site-footer">
-            <p>Copyright &copy; 2013-2014 - <a href="https://zacharyseguin.ca/">Zachary Seguin</a>. Data updated every half hour from the <a href="https://api.uwaterloo.ca/" target="_blank">University of Waterloo Open Data API</a>.</p>
-        </footer>
-    </body>
+            <section class="detail">
+               <ng-view />
+            </section>
+         </div><!-- End of content -->
+      </div><!-- End of content-container -->
+
+      <!-- Footer -->
+      <div id="footer-container">
+         <footer>
+            <p><em>Data updated every half hour from the <a href="https://api.uwaterloo.ca/" target="_blank">University of Waterloo Open Data API</a>.</em></p>
+            <p>Copyright &copy; 2014 &ndash; <a href="https://zacharyseguin.ca/">Zachary Seguin</a><br />All Rights Reserved.</p>
+         </footer>
+      </div><!-- End of footer-container -->
+      
+      <!-- Javascript -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js"></script>
+      <script src="resources/javascript/YouWantFood.js"></script>
+      <script src="resources/javascript/factories/YouWantFoodAPI.js"></script>
+      <script src="resources/javascript/controllers/Outlets.js"></script>
+      <script src="resources/javascript/controllers/OutletDetails.js"></script>
+      <script src="resources/javascript/controllers/Home.js"></script>
+      <!-- End of Javascript -->
+   </body>
 </html>
