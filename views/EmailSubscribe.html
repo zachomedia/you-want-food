@@ -1,0 +1,14 @@
+<h1 class="title">Email Subscribe</h1>
+
+<p class="error" ng-show="error">{{error}}</p>
+<p class="success" ng-show="success">{{success}}</p>
+
+<p>Subscribe to receive the daily menu sent to your email every morning.</p>
+<p class="small">To stop receiving emails, <a href="#/email-unsubscribe">click here</a>.</p>
+
+<form id="form-email-subscribe" ng-submit="subscribe()">
+    <label for="email">Email Address:</label>
+    <input type="email" name="email" id="email" placeholder="example@example.com" autofocus required ng-model='email' />
+    
+    <input type="submit" value="Subscribe">
+</form>

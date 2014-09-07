@@ -23,30 +23,22 @@
 'use strict';
 
 angular
-    .module('YouWantFood', [
-        'ngRoute',
-        'ngSanitize',
-        'ngResource'
-    ])
-    .config(function($routeProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'views/Home.html',
-                controller: 'Home'
-            })
-            .when('/outlet/:outletId', {
-                templateUrl: 'views/OutletDetails.html',
-                controller: 'OutletDetails'
-            })
-            .when('/email-subscribe', {
-                templateUrl: 'views/EmailSubscribe.html',
-                controller: 'EmailSubscribe'
-            })
-            .when('/email-unsubscribe', {
-                templateUrl: 'views/EmailUnsubscribe.html',
-                controller: 'EmailUnsubscribe'
-            })
-            .otherwise({
-                templateUrl: 'views/NotFound.html'
-            })
-    });
+    .module('YouWantFood')
+    .controller('EmailUnsubscribe', ['$scope', 'YouWantFoodAPI', function($scope, YouWantFoodAPI) {
+        $scope.unsubscribe = function() {
+            YouWantFoodAPI.unsubscribe().post({
+                email: $scope.email
+            }, function(response) {
+                console.log(response);
+                if (response.success) {
+                    $scope.success = "You are now unsubscribed from daily emails.";
+                    $scope.error = "";
+                    
+                    $scope.email = "";
+                } else {
+                    $scope.success = "";
+                    $scope.error = response.error;
+                }
+            });
+        }
+    }]);

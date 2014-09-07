@@ -55,6 +55,7 @@
       padding: 0 !important;
       
       position: relative;
+      line-height: 1.3em;
    }
    
    .outlets-list li.selected {
@@ -74,7 +75,7 @@
 
        position: absolute;
        left: 8px;
-       top: 14px;
+       top: 15px;
 
        display: box;
        width: 10px;
@@ -139,4 +140,47 @@
 }
 .diet_type {
     font-size: 0.8em;
+}
+
+form {
+    padding: 15px;
+}
+
+form label {
+    display: inline-block;
+    font-weight: 400;
+    text-align: right;
+    width: 150px;
+    margin-right: 10px;
+}
+
+form input[type=email] {
+    width: 450px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0;
+    outline: none;
+}
+
+form input[type=email]:focus {
+    border: 1px solid #aaa;
+}
+
+form input[type=submit] {
+    display: block;
+    margin: 10px;
+    margin-left: 165px;
+}
+
+.success {
+    color: #00aa00;
+    border: 2px solid #00aa00;
+}
+
+.error {
+    color: #aa0000;
+    border: 2px solid #aa0000;
 }

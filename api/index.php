@@ -96,56 +96,64 @@ if ($request == 'outlets') {
 } else if ($request == 'email_subscribe') {
     $form_data = json_decode(file_get_contents("php://input"), true);
     $email = $form_data['email'];
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(array('success' => false, 'error' => 'The email address provided is invalid.'));
+    } else {
+        try {
+            $conn = new PDO('mysql:host=' . $config['DATABASE_HOSTNAME'] . ';dbname=' . $config['DATABASE_DATABASE'], $config['DATABASE_USER'], $config['DATABASE_PASSWORD']);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    try {
-        $conn = new PDO('mysql:host=' . $config['DATABASE_HOSTNAME'] . ';dbname=' . $config['DATABASE_DATABASE'], $config['DATABASE_USER'], $config['DATABASE_PASSWORD']);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare('SELECT * FROM email_subscriptions WHERE email = :email');
+            $stmt->execute(array('email' => $email));
 
-        $stmt = $conn->prepare('SELECT * FROM email_subscriptions WHERE email = :email');
-        $stmt->execute(array('email' => $email));
+            $results = $stmt->fetchAll();
+            if (count($results) != 0) {
+                if ($results[0]['enabled'] == '0') {
+                    $stmt = $conn->prepare('UPDATE email_subscriptions SET enabled = 1 WHERE email = :email');
+                    $stmt->execute(array('email' => $email));
 
-        $results = $stmt->fetchAll();
-        if (count($results) != 0) {
-            if ($results[0]['enabled'] == '0') {
-                $stmt = $conn->prepare('UPDATE email_subscriptions SET enabled = 1 WHERE email = :email');
+                    echo json_encode(array('success' => $stmt->rowCount() == 1));
+                } else {
+                    echo json_encode(array('success' => false, 'error' => 'The email address provided has already subscribed to receive emails.'));
+                }// End of else
+            } else {
+                $stmt = $conn->prepare('INSERT INTO email_subscriptions (email, enabled) VALUES (:email, 1)');
                 $stmt->execute(array('email' => $email));
 
                 echo json_encode(array('success' => $stmt->rowCount() == 1));
-            } else {
-                echo json_encode(array('success' => false, 'email_exist' => true));
-            }// End of else
-        } else {
-            $stmt = $conn->prepare('INSERT INTO email_subscriptions (email, enabled) VALUES (:email, 1)');
-            $stmt->execute(array('email' => $email));
-
-            echo json_encode(array('success' => $stmt->rowCount() == 1));
+            }
+        } catch (PDOException $e) {
+            echo json_encode(array( 'success' => false, 'error' => 'An unknown error occured while subscribing.'));
         }
-    } catch (PDOException $e) {
-        echo json_encode(array( 'success' => false, 'error' => $e->getMessage()));
     }
 } else if ($request == 'email_unsubscribe') {
     $form_data = json_decode(file_get_contents("php://input"), true);
     $email = $form_data['email'];
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(array('success' => false, 'error' => 'The email address provided is invalid.'));
+    } else {
+        try {
+            $conn = new PDO('mysql:host=' . $config['DATABASE_HOSTNAME'] . ';dbname=' . $config['DATABASE_DATABASE'], $config['DATABASE_USER'], $config['DATABASE_PASSWORD']);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    try {
-        $conn = new PDO('mysql:host=' . $config['DATABASE_HOSTNAME'] . ';dbname=' . $config['DATABASE_DATABASE'], $config['DATABASE_USER'], $config['DATABASE_PASSWORD']);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $conn->prepare('SELECT * FROM email_subscriptions WHERE email = :email');
-        $stmt->execute(array('email' => $email));
-
-        $results = $stmt->fetchAll();
-        if (count($results) != 1) {
-            echo json_encode(array('success' => false, 'email_does_not_exist' => true));
-        } else {
-            $stmt = $conn->prepare('UPDATE email_subscriptions SET enabled = 0 WHERE email = :email');
+            $stmt = $conn->prepare('SELECT * FROM email_subscriptions WHERE email = :email AND enabled=1');
             $stmt->execute(array('email' => $email));
 
-            echo json_encode(array('success' => $stmt->rowCount() == 1));
+            $results = $stmt->fetchAll();
+            if (count($results) != 1) {
+                echo json_encode(array('success' => false, 'error' => 'The email address provided has not subscribed to receive emails.'));
+            } else {
+                $stmt = $conn->prepare('UPDATE email_subscriptions SET enabled = 0 WHERE email = :email');
+                $stmt->execute(array('email' => $email));
+
+                echo json_encode(array('success' => $stmt->rowCount() == 1));
+            }
+        } catch (PDOException $e) {
+            echo json_encode(array( 'success' => false, 'error' => 'An unknown error occured while unsubscribing'));
         }
-    } catch (PDOException $e) {
-        echo json_encode(array( 'success' => false, 'error' => $e->getMessage()));
-    }
+    }    
 } else {
     header('HTTP/1.0 400 Bad Request');
     die();

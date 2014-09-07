@@ -65,6 +65,22 @@ angular
               }
               
               return cache.menu[id];
+           },
+           
+           subscribe: function() {
+               if (!cache.subscribe) {
+                   cache.subscribe = $resource('api/?data=email_subscribe', {}, { post: {method: 'POST'}});
+               }
+               
+               return cache.subscribe;
+           },
+           
+           unsubscribe: function() {
+               if (!cache.unsubscribe) {
+                   cache.unsubscribe = $resource('api/?data=email_unsubscribe', {}, { post: {method: 'POST'}});
+               }
+               
+               return cache.unsubscribe;
            }
 
         };
