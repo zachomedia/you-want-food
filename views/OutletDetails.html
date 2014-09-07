@@ -3,7 +3,7 @@
 
 <p class="outlet-logo"><img ng-src="{{outlet.logo}}" ng-hide="!outlet.logo" /></p>
 
-<p class="outlet-location">Located in {{outlet.building}}.</p>
+<p class="outlet-location" ng-show="outlet.building">Located in {{outlet.building}}.</p>
 <p class="outlet-description" ng-bind-html="outlet.description"></p>
 
 <section class="outlet-notice notice" ng-hide="!outlet.notice">
