@@ -33,7 +33,7 @@ angular
            
            outlets: function() {
               if (!cache.outlets) {
-                 cache.outlets = $resource('api/?data=outlets', {}, { get: { cache: true }});
+                 cache.outlets = $resource('api/?data=outlets', {}, { get: { method: 'GET', cache: true }});
               }
               
               return cache.outlets;
@@ -61,7 +61,7 @@ angular
               }
               
               if (!cache.menu[id]) {
-                 cache.menu[id] = $resource('api/?data=menu&outlet_id=:outlet_id', {outlet_id: '@outlet_id'}, { get: {params: {outlet_id: id}, isArray: false, cache: true}});
+                 cache.menu[id] = $resource('api/?data=menu&outlet_id=:outlet_id', {outlet_id: '@outlet_id'}, { get: {method: 'GET', params: {outlet_id: id}, isArray: false, cache: true}});
               }
               
               return cache.menu[id];
