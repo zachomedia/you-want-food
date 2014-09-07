@@ -33,8 +33,12 @@ angular
         }
 
         YouWantFoodAPI.outlet($routeParams.outletId).then(function(outlet) {
-            console.log(outlet);
             $scope.outlet = outlet;
+            
+            // Load the menu
+            YouWantFoodAPI.menu($scope.outlet.outlet_id).get(function(menu) {
+               $scope.menu = menu.menu;
+            });
         }, function(reason) {
             console.log(reason);
         });

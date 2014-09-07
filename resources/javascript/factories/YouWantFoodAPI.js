@@ -30,31 +30,42 @@ angular
 
         // API Functions
         var YouWantFoodAPI = {
-
-            outlets: function() {
-                if (!cache.outlets) {
-                    cache.outlets = $resource('api/?data=outlets', {}, { get: { cache: true }} );
-                }
-
-                return cache.outlets;
-            },
-
-            outlet: function(id) {
-                var deferred = $q.defer();
-
-                this.outlets().query(function(outlets) {
-                    for (var indx in outlets) {
-                        if (outlets[indx].outlet_id == id) {
-                            deferred.resolve(outlets[indx]);
-                            break;
-                        }
-                    }
-
-                    deferred.reject('outlet not found');
-                });
-
-                return deferred.promise;
-            }
+           
+           outlets: function() {
+              if (!cache.outlets) {
+                 cache.outlets = $resource('api/?data=outlets', {}, { get: { cache: true }});
+              }
+              
+              return cache.outlets;
+           },
+           outlet: function(id) {
+               var deferred = $q.defer();
+               
+               this.outlets().query(function(outlets) {
+                  for (var indx in outlets) {
+                     if (outlets[indx].outlet_id == id) {
+                        deferred.resolve(outlets[indx]);
+                        break;
+                     }
+                  }
+               
+                  deferred.reject('outlet not found');
+               });
+               
+               return deferred.promise;
+           },
+           
+           menu: function(id) {
+              if (!cache.menu) {
+                 cache.menu = [];
+              }
+              
+              if (!cache.menu[id]) {
+                 cache.menu[id] = $resource('api/?data=menu&outlet_id=:outlet_id', {outlet_id: '@id'}, { get: {params: {outlet_id: id}, isArray: false, cache: true}});
+              }
+              
+              return cache.menu[id];
+           }
 
         };
 

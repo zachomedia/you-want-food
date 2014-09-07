@@ -117,6 +117,7 @@
         float: left;
         width: 32%;
         margin-left: 5px;
+        margin-bottom: 20px;
     }
 
 .notice {
@@ -130,4 +131,12 @@
 .outlet-logo img {
     max-width: 250px;
     max-height: 150px;
+}
+
+.outlet_menu_meal ul li {
+    margin-left: 35px !important;
+    list-style: square !important;
+}
+.diet_type {
+    font-size: 0.8em;
 }

@@ -82,13 +82,13 @@ if ($request == 'outlets') {
             $found = false;
             foreach ($menu['data']['outlets'] as $outlet) {
                 if ($outlet['outlet_id'] == $_GET['outlet_id']) {
-                    echo json_encode($outlet['menu']);
+                    echo json_encode($outlet);
                     $found = true;
                     break;
                 }
             }
             
-            if (!$found) { echo json_encode(array()); }
+            if (!$found) { echo json_encode(null); }
         }
     } else {
         echo json_encode(array());

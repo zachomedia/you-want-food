@@ -11,8 +11,10 @@
     <p ng-bind-html="outlet.notice"></p>
 </section>
 
-<h2>Hours of Operation</h2>
 <section class="outlet-hours">
+    <header>
+        <h1>Hours of Operation</h1>
+    </header>
     <div>
         <h3>Standard Hours</h3>
         <table cellspacing="0">
@@ -50,17 +52,30 @@
     </div>
 </section>
 
-<section class="outlet-menu">
-    <h2 ng-show="outlet.menu[0]">Menu</h2>
-    <article class="outlet_menu_day" ng-repeat="day in outlet.menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">
+<section class="outlet-menu" ng-show="menu[0]">
+    <header>
+        <h1>Menu</h1>
+    </header>
+    <article class="outlet_menu_day" ng-repeat="day in menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">
         <h3>{{day.day}}</h3>
-        <article class="outlet_menu_meal" ng-repeat="meal in day.meals|orderBy:'order'">
-            <h4>{{meal.name}}</h4>
-
+        
+        <article class="outlet_menu_meal">
+            <h4>Lunch</h4>
+            
             <ul>
-                <li ng-repeat="item in meal.items">{{item.product_name}} <span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
-                <p ng-hide="meal.items.length">No menu information</p>
+                <li ng-repeat="item in day.meals.lunch">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
+                <p ng-hide="day.meals.lunch.length">No menu information</p>
             </ul>
+        </article>
+        
+        <article class="outlet_menu_meal">
+            <h4>Dinner</h4>
+        
+            <ul>
+                <li ng-repeat="item in day.meals.dinner">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
+                <p ng-hide="day.meals.dinner.length">No menu information</p>
+            </ul>
+        </article>
 
             <section class="notice" ng-hide="{{!meal.notes}}"><p ng-bind-html="meal.notes"></p></section>
         </article>
