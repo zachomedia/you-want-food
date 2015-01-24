@@ -30,17 +30,17 @@ angular
 
         // API Functions
         var YouWantFoodAPI = {
-           
+
            outlets: function() {
               if (!cache.outlets) {
-                 cache.outlets = $resource('api/?data=outlets', {}, { get: { method: 'GET', cache: true }});
+                 cache.outlets = $resource('./api/outlets.json', {}, { get: { method: 'GET', cache: true }});
               }
-              
+
               return cache.outlets;
            },
            outlet: function(id) {
                var deferred = $q.defer();
-               
+
                this.outlets().query(function(outlets) {
                   for (var indx in outlets) {
                      if (outlets[indx].outlet_id == id) {
@@ -48,38 +48,38 @@ angular
                         break;
                      }
                   }
-               
+
                   deferred.reject('outlet not found');
                });
-               
+
                return deferred.promise;
            },
-           
+
            menu: function(id) {
               if (!cache.menu) {
                  cache.menu = [];
               }
-              
+
               if (!cache.menu[id]) {
-                 cache.menu[id] = $resource('api/?data=menu&outlet_id=:outlet_id', {outlet_id: '@outlet_id'}, { get: {method: 'GET', params: {outlet_id: id}, isArray: false, cache: true}});
+                 cache.menu[id] = $resource('./api/menu/:outlet_id.json', {outlet_id: '@outlet_id'}, { get: {method: 'GET', params: {outlet_id: id}, isArray: false, cache: true}});
               }
-              
+
               return cache.menu[id];
            },
-           
+
            subscribe: function() {
                if (!cache.subscribe) {
-                   cache.subscribe = $resource('api/?data=email_subscribe', {}, { post: {method: 'POST'}});
+                   cache.subscribe = $resource('./api/email/subscribe.json', {}, { post: {method: 'POST'}});
                }
-               
+
                return cache.subscribe;
            },
-           
+
            unsubscribe: function() {
                if (!cache.unsubscribe) {
-                   cache.unsubscribe = $resource('api/?data=email_unsubscribe', {}, { post: {method: 'POST'}});
+                   cache.unsubscribe = $resource('./api/email/unsubscribe.json', {}, { post: {method: 'POST'}});
                }
-               
+
                return cache.unsubscribe;
            }
 

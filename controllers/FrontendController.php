@@ -1,5 +1,7 @@
+<?php
+
 /*
-    Copyright (c) 2014 Zachary Seguin
+    Copyright (c) 2015 Zachary Seguin
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +22,18 @@
     THE SOFTWARE.
 */
 
-'use strict';
+namespace ZacharySeguin\YouWantFood\Controller;
 
-angular
-    .module('YouWantFood', [
-        'ngRoute',
-        'ngSanitize',
-        'ngResource'
-    ])
-    .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'views/Home.html',
-                controller: 'Home'
-            })
-            .when('/outlet/:outletId', {
-                templateUrl: 'views/OutletDetails.html',
-                controller: 'OutletDetails'
-            })
-            .when('/email-subscribe', {
-                templateUrl: 'views/EmailSubscribe.html',
-                controller: 'EmailSubscribe'
-            })
-            .when('/email-unsubscribe', {
-                templateUrl: 'views/EmailUnsubscribe.html',
-                controller: 'EmailUnsubscribe'
-            })
-            .otherwise({
-                templateUrl: 'views/NotFound.html'
-            });
-         $locationProvider.html5Mode(true);
-    }]);
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
+class FrontendController
+{
+   public function frontendAction()
+   {
+      return new BinaryFileResponse(__DIR__ . '/../app.html');
+   }// End of frontendAction method
+}// End of FrontendController
+
+?>

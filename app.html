@@ -24,6 +24,8 @@
 -->
 <html lang="en" ng-app="YouWantFood">
    <head>
+      <base href="/projects/you-want-food/" />
+
       <!-- Meta Information -->
       <meta charset="utf-8" />
 
@@ -64,14 +66,14 @@
                   <li class="title">You Want Food</li>
                </ul>
                <ul>
-                  <li><a href="#/">Home</a></li>
+                  <li><a href="./">Home</a></li>
                </ul>
             </nav>
 
             <!-- Right/Secondary navigation -->
             <menu>
                <ul>
-                  <li><a href="#/email-subscribe">Email Subscribe</a></li>
+                  <li><a href="./email-subscribe">Email Subscribe</a></li>
                </ul>
             </menu>
          </div> <!-- End of navigation-wrapper -->
@@ -87,7 +89,7 @@
                <input type="search" ng-model="filter" placeholder="Search Outlets..." id="outlets-filter" />
                <ul class="outlets-list">
                    <li ng-repeat="outlet in outlets|orderBy:'outlet_name'|filter:filter" ng-class="{open: outlet.is_open_now, closed: !outlet.is_open_now, first: $first, selected: isSelectedOutlet(outlet.outlet_id)}">
-                       <a href="#/outlet/{{outlet.outlet_id}}">
+                       <a href="./outlet/{{outlet.outlet_id}}">
                            <span class="outlet_name" ng-hide="outlet.outlet_name == null">{{outlet.outlet_name}}</span>
                            <span class="outlet_name" ng-show="outlet.outlet_name == null">Name Unavailable</span>
                        </a>
@@ -108,7 +110,7 @@
             <p>Copyright &copy; 2014 &ndash; <a href="https://zacharyseguin.ca/">Zachary Seguin</a><br />All Rights Reserved.</p>
          </footer>
       </div><!-- End of footer-container -->
-      
+
       <!-- Javascript -->
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
