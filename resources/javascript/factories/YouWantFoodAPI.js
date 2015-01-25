@@ -55,6 +55,18 @@ angular
                return deferred.promise;
            },
 
+           inspections: function(id) {
+              if (!cache.inspections) {
+                 cache.inspections = [];
+              }
+
+              if (!cache.inspections[id]) {
+                 cache.inspections[id] = $resource('./api/inspections/uwaterloo/:outlet_id.json', {}, { get: {method: 'GET', params: {outlet_id: id}, isArray: false, cache: true}});
+              }
+
+              return cache.inspections[id];
+           },
+
            menu: function(id) {
               if (!cache.menu) {
                  cache.menu = [];

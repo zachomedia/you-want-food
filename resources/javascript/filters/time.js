@@ -23,32 +23,25 @@
 'use strict';
 
 angular
-    .module('YouWantFood', [
-        'ngRoute',
-        'ngSanitize',
-        'ngResource',
-        'ui.bootstrap'
-    ])
-    .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'views/Home.html',
-                controller: 'Home'
-            })
-            .when('/outlet/:outletId', {
-                templateUrl: 'views/OutletDetails.html',
-                controller: 'OutletDetails'
-            })
-            .when('/email-subscribe', {
-                templateUrl: 'views/EmailSubscribe.html',
-                controller: 'EmailSubscribe'
-            })
-            .when('/email-unsubscribe', {
-                templateUrl: 'views/EmailUnsubscribe.html',
-                controller: 'EmailUnsubscribe'
-            })
-            .otherwise({
-                templateUrl: 'views/NotFound.html'
-            });
-         $locationProvider.html5Mode(true);
-    }]);
+   .module('YouWantFood')
+   .filter('time', function() {
+      return function(strTime) {
+         if (strTime == null) return undefined;
+         var components = strTime.split(":");
+
+         var hour = parseInt(components[0]);
+         var minute = components[1];
+         var ampm = "am";
+
+         if (hour == 0) hour = 12;
+         else if (hour == 12) {
+            ampm = "pm";
+         }
+         else if (hour > 12) {
+            hour -= 12;
+            ampm = "pm";
+         }
+
+         return hour + ":" + minute + " " + ampm;
+      }
+   });

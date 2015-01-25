@@ -43,33 +43,33 @@
 
 .outlets-list {
    list-style: none;
-   
+
    margin: 0 !important;
    padding: 0 !important;
 }
 
    .outlets-list li {
       list-style: none;
-      
+
       margin: 0 !important;
       padding: 0 !important;
-      
+
       position: relative;
       line-height: 1.3em;
    }
-   
+
    .outlets-list li.selected {
       background: #f3f3f3;
    }
-   
+
    .outlets-list li a {
       display: block;
-      
+
       padding: 10px;
       padding-left: 26px;
       border-bottom: 1px solid #eee;
    }
-   
+
    .outlets-list li a:before {
        content: ' ';
 
@@ -92,9 +92,14 @@
    .outlets-list li.closed a:before {
        background: #aa0000;
    }
-   
+
 .outlet-hours table {
-   width: 30% !important;
+   width: 100%;
+   font-size: 0.9em;
+}
+
+.outlet-hours table thead th {
+   text-align: center;
 }
 
 .outlet-hours table td {
@@ -120,6 +125,10 @@
         margin-left: 5px;
         margin-bottom: 20px;
     }
+
+.outlet_menu_meal {
+   margin-left: 20px;
+}
 
 .notice {
     background: #eee;

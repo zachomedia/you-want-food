@@ -34,11 +34,14 @@ angular
 
         YouWantFoodAPI.outlet($routeParams.outletId).then(function(outlet) {
             $scope.outlet = outlet;
-            
+
             // Load the menu
             YouWantFoodAPI.menu($scope.outlet.outlet_id).get(function(menu) {
                $scope.menu = menu.menu;
             });
+
+            // Load inspections
+            $scope.inspections = YouWantFoodAPI.inspections($routeParams.outletId).get();
         }, function(reason) {
             console.log(reason);
         });

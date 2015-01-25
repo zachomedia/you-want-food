@@ -67,6 +67,8 @@ $app->post('/api/email/unsubscribe.json', "email-subscription.controller:unsubsc
 
 $app->get('/api/inspections/facilities.json', 'inspections.controller:facilitiesAction');
 $app->get('/api/inspections/facility/{facility_id}.json', 'inspections.controller:facilityAction');
+$app->get('/api/inspections/uwaterloo/{uwaterloo_id}.json', 'inspections.controller:uwaterlooAction')
+   ->assert('uwaterloo_id', '\d+');
 
 $app->run();
 

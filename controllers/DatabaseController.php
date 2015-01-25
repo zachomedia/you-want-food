@@ -54,11 +54,24 @@ class DatabaseController
 
       if ($res === FALSE) return FALSE;
       return $stmt->fetchAll();
-   }// End of getInspectionsFacilities method
+   }// End of getInspectionsFacility method
+
+   public function getFacilityIdFromUWaterlooId($uwaterloo_id)
+   {
+      $stmt = $this->conn->prepare("SELECT facility_id FROM facility_mappings WHERE id = :id");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array('id' => $uwaterloo_id));
+      if ($res === FALSE) return FALSE;
+
+      $rows = $stmt->fetchAll();
+      if (count($rows) == 0) return FALSE;
+
+      return $rows[0]['facility_id'];
+   }// End of getFacilityIdFromUWaterlooId method
 
    public function getInspectionsInspectionsForFacility($facility_id)
    {
-      $stmt = $this->conn->prepare("SELECT * FROM inspections_inspections WHERE facility_id = :facility_id");
+      $stmt = $this->conn->prepare("SELECT * FROM inspections_inspections WHERE facility_id = :facility_id ORDER BY inspection_date");
       $stmt->setFetchMode(\PDO::FETCH_ASSOC);
       $res = $stmt->execute(array('facility_id' => $facility_id));
 

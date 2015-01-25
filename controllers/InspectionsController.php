@@ -38,6 +38,14 @@ class InspectionsController
       $this->db = $db;
    }// End of constructor method
 
+   public function uwaterlooAction($uwaterloo_id)
+   {
+      $facility_id = $this->db->getFacilityIdFromUWaterlooId($uwaterloo_id);
+      if ($facility_id === FALSE) return new Response("", 500);
+
+      return $this->facilityAction($facility_id);
+   }// End of uwaterlooAction method
+
    public function facilitiesAction()
    {
       $facilities = $this->db->getInspectionsFacilities();
