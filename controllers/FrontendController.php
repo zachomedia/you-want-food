@@ -24,7 +24,7 @@
 
 namespace ZacharySeguin\YouWantFood\Controller;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -34,6 +34,6 @@ class FrontendController
    {
       return new BinaryFileResponse(__DIR__ . '/../app.html');
    }// End of frontendAction method
-}// End of FrontendController
+}// End of FrontendController class
 
 ?>

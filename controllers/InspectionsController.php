@@ -26,10 +26,10 @@ namespace ZacharySeguin\YouWantFood\Controller;
 
 require_once(__DIR__ . '/../vendor/autoload.php');
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class EmailSubscriptionController
+class InspectionsController
 {
    private $db;
 
@@ -38,30 +38,31 @@ class EmailSubscriptionController
       $this->db = $db;
    }// End of constructor method
 
-   private function getEmail(Request $request)
+   public function facilitiesAction()
    {
-      if (0 !== strpos($request->headers->get('Content-Type'), 'application/json')) return FALSE;
+      $facilities = $this->db->getInspectionsFacilities();
 
-      $data = json_decode($request->getContent(), true);
-      if (!is_array($data)) return FALSE;
-      if (!isset($data['email'])) return FALSE;
-      return $data['email'];
-   }// End of getEmail method
+      if ($facilities === FALSE) return new Response("", 500);
+      return new JsonResponse($facilities);
+   }// End of facilitiesAction method
 
-   public function subscribeAction(Request $request)
+   public function facilityAction($facility_id)
    {
-      $email = $this->getEmail($request);
+      $facility = $this->db->getInspectionsFacility($facility_id);
+      if ($facility === FALSE) return new Response("", 500);
+      $facility = $facility[0];
 
-      return new JsonResponse(array('success' => false, 'error' => 'Sorry, subscriptions to You Want Food are currently unavailable. Please check back at a later time.'));
-   }// End of subscribeAction method
+      $inspections = $this->db->getInspectionsInspectionsForFacility($facility_id);
+      $facility['inspections'] = ($inspections !== FALSE) ? $inspections : array();
 
-   public function unsubscribeAction(Request $request)
-   {
-      $email = $this->getEmail($request);
-      if ($email === FALSE) return Response("", 400);
+      foreach ($facility['inspections'] as &$i)
+      {
+         $infractions = $this->db->getInspectionsInfractionsForInspection($i['id']);
+         $i['infractions'] = ($infractions !== FALSE) ? $infractions : array();
+      }// End of for
 
-      return new JsonResponse(array('success' => false, 'error' => 'Sorry, subscriptions (including unsubscription) to You Want Food are currently unavailable. Please check back at a later time.'));
-   }// End of unsubscribeAction method
-}// End of EmailSubscriptionController class
+      return new JsonResponse($facility);
+   }// End of facilityAction method
+}// End of InspectionsController class
 
 ?>

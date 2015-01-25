@@ -31,6 +31,10 @@ $app = new \Silex\Application();
 $app['debug'] = true;
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 
+$app['database.controller'] = $app->share(function() {
+   return new Controller\DatabaseController(DATABASE_HOSTNAME, DATABASE_PORT, DATABASE_DB, DATABASE_USER, DATABASE_PASSWORD);
+});
+
 $app['frontend.controller'] = $app->share(function() {
    return new Controller\FrontendController();
 });
@@ -39,8 +43,12 @@ $app['uwaterloo-api.controller'] = $app->share(function() {
    return new Controller\UWaterlooAPIController(UWATERLOO_API_KEY, UWATERLOO_API_BASE);
 });
 
-$app['email-subscription.controller'] = $app->share(function() {
-   return new Controller\EmailSubscriptionController();
+$app['email-subscription.controller'] = $app->share(function($app) {
+   return new Controller\EmailSubscriptionController($app['database.controller']);
+});
+
+$app['inspections.controller'] = $app->share(function($app) {
+   return new Controller\InspectionsController($app['database.controller']);
 });
 
 $app->get('/', "frontend.controller:frontendAction");
@@ -56,6 +64,9 @@ $app->get('/api/menu/{outlet_id}.json', "uwaterloo-api.controller:menuForOutletA
 
 $app->post('/api/email/subscribe.json', "email-subscription.controller:subscribeAction");
 $app->post('/api/email/unsubscribe.json', "email-subscription.controller:unsubscribeAction");
+
+$app->get('/api/inspections/facilities.json', 'inspections.controller:facilitiesAction');
+$app->get('/api/inspections/facility/{facility_id}.json', 'inspections.controller:facilityAction');
 
 $app->run();
 

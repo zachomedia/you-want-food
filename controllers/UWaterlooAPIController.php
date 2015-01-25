@@ -24,7 +24,7 @@
 
 namespace ZacharySeguin\YouWantFood\Controller;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -97,6 +97,6 @@ class UWaterlooAPIController
 
       return new JsonResponse(array("error" => "No menu information available for this location."), 404);
    }// End of menuForOutletAction method
-}// End of FrontendController
+}// End of UWaterlooAPIController class
 
 ?>
