@@ -55,6 +55,30 @@ angular
                return deferred.promise;
            },
 
+           outletReviews: function(id) {
+              if (!cache.outletReviews) {
+                 cache.outletReviews = [];
+              }
+
+              if (!cache.outletReviews[id]) {
+                 cache.outletReviews[id] = $resource('./api/reviews/outlet/:outlet_id.json', {}, { get: {method: 'GET', params: {outlet_id: id}, isArray: true, cache: false}});
+              }
+
+              return cache.outletReviews[id];
+           },
+
+           addOutletReview: function(id) {
+              if (!cache.addOutletReview) {
+                 cache.addOutletReview = [];
+              }
+
+              if (!cache.addOutletReview[id]) {
+                 cache.addOutletReview[id] = $resource('./api/reviews/outlet/:outlet_id/add.json', {}, { post: {method: 'POST', params: {outlet_id: id}, isArray: false, cache: false}});
+              }
+
+              return cache.addOutletReview[id];
+           },
+
            inspections: function(id) {
               if (!cache.inspections) {
                  cache.inspections = [];

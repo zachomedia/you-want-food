@@ -47,6 +47,10 @@ $app['email-subscription.controller'] = $app->share(function($app) {
    return new Controller\EmailSubscriptionController($app['database.controller']);
 });
 
+$app['reviews.controller'] = $app->share(function($app) {
+   return new Controller\ReviewsController($app['database.controller']);
+});
+
 $app['inspections.controller'] = $app->share(function($app) {
    return new Controller\InspectionsController($app['database.controller']);
 });
@@ -65,6 +69,11 @@ $app->get('/api/menu/{outlet_id}.json', "uwaterloo-api.controller:menuForOutletA
 
 $app->post('/api/email/subscribe.json', "email-subscription.controller:subscribeAction");
 $app->post('/api/email/unsubscribe.json', "email-subscription.controller:unsubscribeAction");
+
+$app->get('/api/reviews/outlet/{outlet_id}.json', 'reviews.controller:outletAction')
+   ->assert('outlet_id', '\d+');
+$app->post('/api/reviews/outlet/{outlet_id}/add.json', 'reviews.controller:addOutletReviewAction')
+   ->assert('outlet_id', '\d+');
 
 $app->get('/api/inspections/facilities.json', 'inspections.controller:facilitiesAction');
 $app->get('/api/inspections/facility/{facility_id}.json', 'inspections.controller:facilityAction');

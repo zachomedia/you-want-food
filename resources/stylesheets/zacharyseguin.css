@@ -25,14 +25,14 @@
 /* Import Required Styles */
 @import url("reset.css");
 @import url("zacharyseguin-normal.css"); /* TO BE RESPONSIVE */
-@import url("//fonts.googleapis.com/css?family=Roboto:100,300,400");
+@import url("//fonts.googleapis.com/css?family=Roboto:100,300,400,500");
 
 /* Generic Styles */
 body {
    background: white;
 
    font-family: 'Roboto', sans-serif;
-   font-weight: 300;
+   font-weight: 400;
 }
 
 a {
@@ -45,6 +45,7 @@ a {
 
 a:hover {
    color: #880000;
+   text-decoration: none;
 }
 
    a img {
@@ -62,7 +63,7 @@ hr {
 }
 
 em, b {
-   font-weight: 400;
+   font-weight: 500;
 }
 
 .small {
@@ -108,7 +109,8 @@ em, b {
 
    #content-container #content {
       line-height: 1.45em;
-      color: #555;
+      color: #444;
+      font-size: 0.9em;
       overflow: hidden;
    }
 

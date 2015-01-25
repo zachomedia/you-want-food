@@ -24,8 +24,27 @@
 
 angular
     .module('YouWantFood')
-    .controller('OutletDetails', function($scope, $routeParams, YouWantFoodAPI) {
+    .controller('OutletDetails', ['$scope', '$routeParams', 'YouWantFoodAPI', function($scope, $routeParams, YouWantFoodAPI) {
         var outlets = YouWantFoodAPI.outlets();
+        $scope.review = {
+            name: "",
+            email: "",
+            review: ""
+        };
+
+        $scope.scrollTo = function(anchor) {
+            var destination = document.getElementById(anchor);
+            destination.scrollIntoView(true);
+        }
+
+        $scope.postReview = function() {
+            YouWantFoodAPI.addOutletReview($scope.outlet.outlet_id).post($scope.review, function(response) {
+                $scope.reviews = YouWantFoodAPI.outletReviews($scope.outlet.outlet_id).get();
+                $scope.review = {};
+            }, function(error) {
+                $scope.review.error = error.data.error;
+            });
+        }
 
         $scope.today = new Date();
         $scope.isToday = function(weekday) {
@@ -40,9 +59,12 @@ angular
                $scope.menu = menu.menu;
             });
 
+            // Load reviews
+            $scope.reviews = YouWantFoodAPI.outletReviews($scope.outlet.outlet_id).get();
+
             // Load inspections
-            $scope.inspections = YouWantFoodAPI.inspections($routeParams.outletId).get();
+            $scope.inspections = YouWantFoodAPI.inspections($scope.outlet.outlet_id).get();
         }, function(reason) {
             console.log(reason);
         });
-    });
+    }]);

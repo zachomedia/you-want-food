@@ -36,6 +36,46 @@ class DatabaseController
       $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
    }// End of constructor method
 
+   private function formatDate($strDate)
+   {
+      if ($strDate === null) return null;
+
+      $date = new \DateTime($strDate);
+      return $date->format(\DateTime::W3C);
+   }// End of formatDate method
+
+   public function getReviewsForOutlet($outlet_id)
+   {
+      $stmt = $this->conn->prepare("SELECT id, reviewer_name, review, date FROM outlet_reviews WHERE outlet_id = :outlet_id");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array("outlet_id" => $outlet_id));
+      if ($res === FALSE) return FALSE;
+
+      $results = $stmt->fetchAll();
+      if ($results === FALSE) return FALSE;
+
+      foreach ($results as &$result)
+      {
+         $result['id'] = (int)$result['id'];
+         $result['date'] = $this->formatDate($result['date']);
+      }// End of foreach
+
+      return $results;
+   }// End of getReviewForOutlet method
+
+   public function addOutletReview($outlet_id, $name, $email, $review, $ipaddress)
+   {
+      $stmt = $this->conn->prepare('INSERT INTO outlet_reviews (outlet_id, reviewer_name, reviewer_email, review, ipaddress) VALUES (:outlet_id, :reviewer_name, :reviewer_email, :review, :ipaddress)');
+
+      return $stmt->execute(array(
+         'outlet_id' => $outlet_id,
+         'reviewer_name' => $name,
+         'reviewer_email' => $email,
+         'review' => $review,
+         'ipaddress' => $ipaddress
+      ));
+   }// End of addOutletReview method
+
    public function getInspectionsFacilities()
    {
       $stmt = $this->conn->prepare("SELECT * FROM inspections_facilities");
@@ -86,7 +126,10 @@ class DatabaseController
       $res = $stmt->execute(array('inspection_id' => $inspection_id));
 
       if ($res === FALSE) return FALSE;
-      return $stmt->fetchAll();
+      $results = $stmt->fetchAll();
+
+      if ($results === FALSE) return FALSE;
+      return $results;
    }// End of getInspectionsInfractionsForInspection method
 
    public function addInspectionsFacility($id, $name, $telephone, $street, $city, $eatsmart, $open_date, $description)
@@ -143,7 +186,7 @@ class DatabaseController
       $results = $stmt->fetchAll();
 
       if (count($results) == 0)
-         $stmt = $this->conn->prepare('INSERT INTO inspections_infractions(id, inspection_id, type, category_code, letter_code, description, inspection_date, charge_details) VALUES (:id, :inspection_id, :type, :category_code, :letter_code, :description, :inspection_date, :charge_details)');
+         $stmt = $this->conn->prepare('INSERT INTO inspections_infractions (id, inspection_id, type, category_code, letter_code, description, inspection_date, charge_details) VALUES (:id, :inspection_id, :type, :category_code, :letter_code, :description, :inspection_date, :charge_details)');
       else
          $stmt = $this->conn->prepare('UPDATE inspections_infractions SET inspection_id = :inspection_id, type = :type, category_code = :category_code, letter_code = :letter_code, description = :description, inspection_date = :inspection_date, charge_details = :charge_details WHERE id = :id');
 

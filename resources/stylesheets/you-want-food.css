@@ -102,7 +102,6 @@
 
 .outlet-hours table {
    width: 100%;
-   font-size: 0.9em;
 }
 
 .outlet-hours table thead th {
@@ -168,20 +167,25 @@ form label {
     text-align: right;
     width: 150px;
     margin-right: 10px;
+    vertical-align: top;
 }
 
-form input[type=email] {
-    width: 450px;
+form input[type=email], form input[type=text], textarea  {
+    width: 50%;
     padding: 5px;
     border: 1px solid #ccc;
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 13px;
     margin: 0;
     outline: none;
 }
 
-form input[type=email]:focus {
+form textarea {
+   height: 250px;
+}
+
+form input[type=email]:focus, form input[type=text]:focus, textarea:focus {
     border: 1px solid #aaa;
 }
 
@@ -199,4 +203,27 @@ form input[type=submit] {
 .error {
     color: #aa0000;
     border: 2px solid #aa0000;
+}
+
+.review {
+   border: 1px solid #eee;
+   border-radius: 4px;
+   font-size: 0.95em;
+
+   margin: 15px;
+   padding: 0;
+   box-shadow: 1px 1px 0px rgba(0, 0, 0, .05);
+}
+
+.review h2 {
+   font-size: 0.8em;
+   background: #eee;
+   padding: 10px 15px !important;
+}
+
+.review .meta {
+   color: black;
+   font-size: 0.9em;
+   text-align: right;
+   margin-top: -40px;
 }
