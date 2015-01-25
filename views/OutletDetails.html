@@ -6,8 +6,6 @@
 <p class="outlet-location" ng-show="outlet.building">Located in {{outlet.building}}.</p>
 <p class="outlet-description" ng-bind-html="outlet.description"></p>
 
-<p class="outlet-menu" ng-show="outlet.additional.menu_url"><a href="{{outlet.additional.menu_url}}" target="_blank">Outlet Menu</a></p>
-
 <section class="outlet-notice notice" ng-hide="!outlet.notice">
    <h3>NOTICE</h3>
    <p ng-bind-html="outlet.notice"></p>
