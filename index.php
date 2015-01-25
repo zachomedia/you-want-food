@@ -52,6 +52,7 @@ $app['inspections.controller'] = $app->share(function($app) {
 });
 
 $app->get('/', "frontend.controller:frontendAction");
+$app->get('/about', "frontend.controller:frontendAction");
 $app->get('/outlet/{outlet_id}', "frontend.controller:frontendAction")
    ->assert('outlet_id', '\d+');
 $app->get('/email-subscribe', "frontend.controller:frontendAction");

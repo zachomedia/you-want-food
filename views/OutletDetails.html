@@ -57,7 +57,7 @@
    <tab disabled="!menu[0] && !outlet.additional.menu_url">
      <tab-heading>Menu</tab-heading>
      <section class="menu" ng-show="outlet.additional.menu_url">
-         <p>The menu for this outlet is hosted externally. <a ng-href="{{outlet.additional.menu_url}}" target="_blank">View the menu</a>.</p>
+         <p>The menu for this outlet is not available through Open Data. <a ng-href="{{outlet.additional.menu_url}}" target="_blank">View the menu</a>.</p>
      </section>
      <section class="menu" ng-show="menu[0]">
        <article class="outlet_menu_day" ng-repeat="day in menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">

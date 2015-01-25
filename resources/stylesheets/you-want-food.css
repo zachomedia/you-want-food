@@ -28,6 +28,13 @@
    padding: 5px 0 !important;
 }
 
+.detail ul.normal, .detail ul.normal li {
+   list-style: square !important;
+   margin-left: 25px !important;
+   margin-bottom: 4px !important;
+   padding: 2px 5px !important;
+}
+
 #outlets-filter {
    width: 100%;
    padding: 8px;
