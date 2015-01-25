@@ -73,7 +73,7 @@ class ReviewsController
       $res = $this->db->addOutletReview($outlet_id, $data['name'], $data['email'], $data['review'], $request->getClientIp());
 
       if ($res !== FALSE) return new Response("");
-      return new Response(array("error" => "Sorry, an unexpected error ocurred."), 500);
+      return new JsonResponse(array("error" => "Sorry, an unexpected error ocurred."), 500);
    }// End of addOutletReviewAction method
 }// End of ReviewsController class
 
