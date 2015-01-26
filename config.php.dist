@@ -49,5 +49,5 @@ define('EMAIL_USER', 'example');
 define('EMAIL_PASSWORD', 'secure_password');
 define('EMAIL_FROM', json_encode(array('noreply-youwantfood@example.com' => 'You Want Food by Zachary Seguin')));
 
-define('ACTIVATION_LINK', 'http://zacharyseguin.ca/projects/you-want-food/email/confirm/$1');
+define('ACTIVATION_LINK', 'https://zacharyseguin.ca/projects/you-want-food/email/confirm/$1');
 ?>
