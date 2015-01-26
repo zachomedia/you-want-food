@@ -32,7 +32,7 @@ class DatabaseController
 
    public function __construct($hostname, $port, $db, $user, $password)
    {
-      $this->conn = new \PDO("mysql:host=$hostname;port=$port;dbname=$db", $user, $password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+      $this->conn = new \PDO("mysql:host=$hostname;port=$port;dbname=$db;charset=utf8", $user, $password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
       $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
    }// End of constructor method
 
@@ -133,9 +133,9 @@ class DatabaseController
 
       return $stmt->execute(array(
          'outlet_id' => $outlet_id,
-         'reviewer_name' => $name,
-         'reviewer_email' => $email,
-         'review' => $review,
+         'reviewer_name' => utf8_encode($name),
+         'reviewer_email' => utf8_encode($email),
+         'review' => utf8_encode($review),
          'ipaddress' => $ipaddress
       ));
    }// End of addOutletReview method
@@ -209,13 +209,13 @@ class DatabaseController
 
       return $stmt->execute(array(
          'id' => $id,
-         'name' => $name,
-         'telephone' => $telephone,
-         'street' => $street,
-         'city' => $city,
-         'eatsmart' => $eatsmart,
-         'open_date' => $open_date,
-         'description' => $description
+         'name' => utf8_encode($name),
+         'telephone' => utf8_encode($telephone),
+         'street' => utf8_encode($street),
+         'city' => utf8_encode($city),
+         'eatsmart' => utf8_encode($eatsmart),
+         'open_date' => utf8_encode($open_date),
+         'description' => utf8_encode($description)
       ));
    }// End of addInspectionsFacility method
 
@@ -238,7 +238,7 @@ class DatabaseController
          'certified_food_handler' => $certified_food_handler,
          'inspection_type' => $inspection_type,
          'charge_revoked' => $charge_revoked,
-         'actions' => $actions,
+         'actions' => utf8_encode($actions),
          'charge_date' => $charge_date
       ));
    }// End of addInspectionsInspections method
@@ -258,11 +258,11 @@ class DatabaseController
          'id' => $id,
          'inspection_id' => $inspection_id,
          'type' => $type,
-         'category_code' => $category_code,
-         'letter_code' => $letter_code,
-         'description' => $description,
+         'category_code' => utf8_encode($category_code),
+         'letter_code' => utf8_encode($letter_code),
+         'description' => utf8_encode($description),
          'inspection_date' => $inspection_date,
-         'charge_details' => $charge_details
+         'charge_details' => utf8_encode($charge_details)
       ));
    }// End of addInspectionInfraction method
 }// End of DatabaseController method
