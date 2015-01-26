@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Version 4381
+# Version 4383
 #
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 127.0.0.1 (MySQL 5.5.38)
-# Database: you-want-food
-# Generation Time: 2015-01-25 06:55:54 +0000
+# Host: 127.0.0.1 (MySQL 5.6.19-0ubuntu0.14.04.1)
+# Database: you-want-food-dev
+# Generation Time: 2015-01-26 08:14:46 +0000
 # ************************************************************
 
 
@@ -28,11 +28,13 @@ DROP TABLE IF EXISTS `email_subscriptions`;
 CREATE TABLE `email_subscriptions` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL DEFAULT '',
-  `enabled` tinyint(1) NOT NULL DEFAULT '1',
-  `signup` datetime NOT NULL,
-  `modified` datetime NOT NULL,
+  `status` int(1) NOT NULL DEFAULT '1',
+  `signup` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `token` varchar(100) NOT NULL DEFAULT '',
+  `ipaddress` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -45,7 +47,7 @@ CREATE TABLE `facility_mappings` (
   `id` int(11) unsigned NOT NULL,
   `facility_id` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -64,7 +66,7 @@ CREATE TABLE `inspections_facilities` (
   `open_date` date DEFAULT NULL,
   `description` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -83,7 +85,7 @@ CREATE TABLE `inspections_infractions` (
   `inspection_date` date DEFAULT NULL,
   `charge_details` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -103,7 +105,25 @@ CREATE TABLE `inspections_inspections` (
   `actions` text,
   `charge_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table outlet_reviews
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `outlet_reviews`;
+
+CREATE TABLE `outlet_reviews` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `outlet_id` int(11) unsigned NOT NULL,
+  `reviewer_name` varchar(255) DEFAULT NULL,
+  `reviewer_email` varchar(255) DEFAULT NULL,
+  `review` text,
+  `date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `ipaddress` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
