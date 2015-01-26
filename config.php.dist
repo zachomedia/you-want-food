@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Copyright (c) 2014 Zachary Seguin
+    Copyright (c) 2015 Zachary Seguin
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -9,10 +9,10 @@
     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
     copies of the Software, and to permit persons to whom the Software is
     furnished to do so, subject to the following conditions:
-    
+
     The above copyright notice and this permission notice shall be included in
     all copies or substantial portions of the Software.
-    
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,21 +20,34 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
-*/    
-  
-$config = array();
+*/
 
-$config['DATA_DIRECTORY'] = 'data/';
-$config['OUTLETS_DATA_DIRECTORY'] = $config['DATA_DIRECTORY'] . 'outlets/';
-$config['MENU_DATA_DIRECTORY'] = $config['DATA_DIRECTORY'] . 'menu/';
+/*
+   Database
+*/
+define('DATABASE_HOSTNAME', '127.0.0.1');
+define('DATABASE_PORT', 3306);
+define('DATABASE_DB', 'you-want-food');
+define('DATABASE_USER', 'root');
+define('DATABASE_PASSWORD', 'root');
 
-$config['API_KEY'] = 'YOUR_API_KEY_HERE';
-$config['API_BASE_URL'] = 'https://api.uwaterloo.ca/v2';
+/*
+   University of Waterloo API Configuration
+   UWATERLOO_API_KEY:   Key used while making API requests.
+   UWATERLOO_API_BASE:  Base URL for making API requests.
+*/
+define('UWATERLOO_API_KEY', 'API_KEY');
+define('UWATERLOO_API_BASE', 'https://api.uwaterloo.ca/v2');
 
-$config['DATABASE_HOSTNAME'] = 'localhost';
-$config['DATABASE_DATABASE'] = 'you-want-food';
-$config['DATABASE_USER'] = 'user';
-$config['DATABASE_PASSWORD'] = 'password';
+/*
+   Email
+*/
+define('EMAIL_HOSTNAME', 'mail.example.com');
+define('EMAIL_PORT', 587);
+define('EMAIL_SSL', 'tls');
+define('EMAIL_USER', 'example');
+define('EMAIL_PASSWORD', 'secure_password');
+define('EMAIL_FROM', json_encode(array('noreply-youwantfood@example.com' => 'You Want Food by Zachary Seguin')));
 
-$config['FROM_EMAIL'] = 'no-reply@domain.tld';
+define('ACTIVATION_LINK', 'http://zacharyseguin.ca/projects/you-want-food/email/confirm/$1');
 ?>
