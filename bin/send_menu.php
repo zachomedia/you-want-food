@@ -1,49 +1,12 @@
 <?php
 
-/*
+namespace ZacharySeguin\YouWantFood;
 
-    Copyright (c) 2014 Zachary Seguin
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-
-*/
-
-// Requrie the API configuration (for database connection and email settings)
-require 'config.php';
-
-// sendEmail($to, $contents) Sends an HTML email to $to with the contents $contents
-function sendEmail($to, $contents)
-{
-    global $config;
-    return mail($to, "Daily Menu: You Want Food", $contents, "From: " . $config['FROM_EMAIL'] . "\r\nContent-Type: text/html\r\n");
-}// End of sendEmail function
-
-function getOutletById($id, $outlets)
-{
-    foreach($outlets as $outlet)
-    {
-        if ($outlet['outlet_id'] == $id)
-            return $outlet;
-    }// End of foreach
-
-    return null;
-}// End of getOutletById
+require_once(__DIR__ . '/../vendor/autoload.php');
+require_once(__DIR__ . '/../controllers/DatabaseController.php');
+require_once(__DIR__ . '/../controllers/EmailController.php');
+require_once(__DIR__ . '/../controllers/UWaterlooAPIController.php');
+require_once(__DIR__ . '/../config.php');
 
 // Modified from: https://github.com/uWaterloo/Parsers/blob/master/FoodServices/is_open_now.php
 function today_hours($opening, $special, $closed)
@@ -74,7 +37,25 @@ function today_hours($opening, $special, $closed)
     }
 
     return Array('opening_hour' => $today_start, 'closing_hour' => $today_end, 'is_closed' => $today_closed);
-}
+}// End of today_hours function
+
+// sendEmail($to, $contents) Sends an HTML email to $to with the contents $contents
+function sendEmail($to, $contents)
+{
+    global $config;
+    return mail($to, "Daily Menu: You Want Food", $contents, "From: " . $config['FROM_EMAIL'] . "\r\nContent-Type: text/html\r\n");
+}// End of sendEmail function
+
+function getOutletById($id, $outlets)
+{
+    foreach($outlets as $outlet)
+    {
+        if ($outlet['outlet_id'] == $id)
+            return $outlet;
+    }// End of foreach
+
+    return null;
+}// End of getOutletById
 
 // generateMenuHTML($menu) Generates the HTML for the $menu.
 function generateMenuHTML($outlets, $menu)
@@ -115,7 +96,7 @@ function generateMenuHTML($outlets, $menu)
                         }// End of else
 
                         $email .= " | ";
-                        $email .= "<a href='https://zacharyseguin.ca/projects/you-want-food/#/outlet/" . $outlet_info['outlet_id'] . "' style='color: #aa0000;'>Outlet Details</a>";
+                        $email .= "<a href='https://zacharyseguin.ca/projects/you-want-food/outlet/" . $outlet_info['outlet_id'] . "' style='color: #aa0000;'>Outlet Details</a>";
 
                     $email .= "</p>";
                 $email .= "</div>";
@@ -176,15 +157,24 @@ function generateMenuHTML($outlets, $menu)
 
     /** FOOTER **/
     $email .= "<p style='border-top: 1px solid #eee; padding-top: 10px; margin-bottom: 0px; color: #aaa; font-size: .8em;'>You are receiving this email because this email address was subscribed at <a href='https://zacharyseguin.ca/projects/you-want-food/' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/</a>.</p>";
-    $email .= "<p style='margin-top: 3px; color: #aaa; font-size: .8em;'>To stop receiving these emails, please visit <a href='https://zacharyseguin.ca/projects/you-want-food/#/email-unsubscribe' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/#/email-unsubscribe</a>.</p>";
+    $email .= "<p style='margin-top: 3px; color: #aaa; font-size: .8em;'>To stop receiving these emails, please visit <a href='https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe</a>.</p>";
 
     $email .= "</div>";
     return $email;
 }// End of generateMenuHTML function
 
-// Load the menu information from the API
-$outlets = json_decode(file_get_contents('https://zacharyseguin.ca/projects/you-want-food/api?data=outlets'), true);
-$menu = json_decode(file_get_contents('https://zacharyseguin.ca/projects/you-want-food/api?data=menu'), true);
+// Initialize
+$db = new Controller\DatabaseController(DATABASE_HOSTNAME, DATABASE_PORT, DATABASE_DB, DATABASE_USER, DATABASE_PASSWORD);
+$email = new Controller\EmailController(EMAIL_HOSTNAME, EMAIL_PORT, EMAIL_SSL, EMAIL_USER, EMAIL_PASSWORD, json_decode(EMAIL_FROM, true));
+$uwapi = new Controller\UWaterlooAPIController(UWATERLOO_API_KEY, UWATERLOO_API_BASE);
+
+// Load data
+$outlets = $uwapi->getOutlets();
+$menu = $uwapi->getMenu();
+$subscribers = $db->getActiveEmailSubscriptions();
+
+if ($outlets === FALSE || $menu === FALSE || $subscribers === FALSE)
+   die('Failed to load data');
 
 // Get only menu information for today
 $today = date('Y-m-d');
@@ -192,7 +182,7 @@ $today_menu = Array();
 
 $info_found = false;
 
-foreach ($menu as $outlet)
+foreach ($menu['outlets'] as $outlet)
 {
     $outlet_menu = Array(
         'outlet' => $outlet['outlet_name'],
@@ -222,19 +212,8 @@ if (!$info_found)
 
 $menu_html = generateMenuHTML($outlets, $today_menu);
 
-// Get email addresses to send emails to
-try {
-    $conn = new PDO('mysql:host=' . $config['DATABASE_HOSTNAME'] . ';dbname=' . $config['DATABASE_DATABASE'], $config['DATABASE_USER'], $config['DATABASE_PASSWORD']);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $stmt = $conn->prepare('SELECT email FROM email_subscriptions WHERE enabled = 1');
-    $stmt->execute();
-
-    $results = $stmt->fetchAll();
-
-    foreach ($results as $result) {
-        sendEmail($result['email'], $menu_html);
-    }
-} catch (PDOException $e) {
-    die($e->getMessage());
-}
+foreach ($subscribers as $s)
+{
+   if (!$email->sendEmail($s['email'], "You Want Food - Today's Menu", $menu_html))
+      echo "Failed to send email to: " . $s['email'] . "\n";
+}// End of foreach

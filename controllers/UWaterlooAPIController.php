@@ -62,26 +62,31 @@ class UWaterlooAPIController
       return FALSE;
    }// End of executeRequest method
 
+   public function getOutlets()
+   {
+      return $this->executeRequest("/foodservices/locations");
+   }// End of getOutlets method
+
+   public function getMenu()
+   {
+      return $this->executeRequest("/foodservices/menu");
+   }// End of getOutlets method
+
    public function outletsAction()
    {
-      $response = $this->executeRequest("/foodservices/locations");
+      $response = $this->getOutlets();
       return ($response !== FALSE) ? new JsonResponse($response) : new JsonResponse(array("error" => "An error occured reading the response from the University of Waterloo API."), 500);
    }// End of outletsAction method
 
-   private function getMenuData()
-   {
-      return $this->executeRequest("/foodservices/menu");
-   }// End of getMenuData method
-
    public function menuAction()
    {
-      $response = $this->getMenuData();
+      $response = $this->getMenu();
       return ($response !== FALSE) ? new JsonResponse($response) : new JsonResponse(array("error" => "An error occured reading the response from the University of Waterloo API."), 500);
    }// End of menuAction method
 
    public function menuForOutletAction($outlet_id)
    {
-      $response = $this->getMenuData();
+      $response = $this->getMenu();
 
       if ($response === FALSE) return JsonResponse(array("error" => "An error occured reading the response from the University of Waterloo API."), 500);
 

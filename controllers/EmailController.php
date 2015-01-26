@@ -49,6 +49,16 @@ class EmailController
       $this->from = $from;
    }// End of constructor method
 
+   public function sendEmail($email, $subject, $body)
+   {
+      $message = Swift_Message::newInstance();
+      $message->setSubject($subject);
+      $message->setFrom($this->from);
+      $message->setTo($email);
+      $message->addPart($body, "text/html");
+      return $this->mailer->send($message);
+   }// End of sendEmail function
+
    public function sendConfirmationEmail($email, $token)
    {
       $message = Swift_Message::newInstance();
@@ -80,7 +90,6 @@ class EmailController
       $body .= "<p style='font-size: 0.9em;'>THIS IS AN AUTOMATED MESSAGE -- DO NOT REPLY TO IT<br>If you have any questions or concerns, please email <a href='mailto:contact@zacharyseguin.ca'>contact@zacharyseguin.ca</a>.</p>";
 
       $message->addPart($body, "text/html");
-
       return $this->mailer->send($message);
    }// End of sendConfirmationEmail method
 }// End of FrontendController class

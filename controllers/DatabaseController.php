@@ -44,6 +44,14 @@ class DatabaseController
       return $date->format(\DateTime::W3C);
    }// End of formatDate method
 
+   public function getActiveEmailSubscriptions()
+   {
+      $stmt = $this->conn->prepare("SELECT email FROM email_subscriptions WHERE status=2");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute();
+      return ($res) ? $stmt->fetchAll() : FALSE;
+   }// End of getActiveEmailSubscriptions method
+
    public function subscribe($email, $ipaddress)
    {
       $stmt = $this->conn->prepare("SELECT email, status, token FROM email_subscriptions WHERE email = :email");
