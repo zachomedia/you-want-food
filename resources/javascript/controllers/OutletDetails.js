@@ -42,7 +42,7 @@ angular
                 $scope.reviews = YouWantFoodAPI.outletReviews($scope.outlet.outlet_id).get();
                 $scope.review = {};
             }, function(error) {
-                $scope.review.error = error.data.error;
+                $scope.review.error = error.data.error || "Sorry, an unexpected error occurred.";
             });
         }
 

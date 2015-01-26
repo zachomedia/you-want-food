@@ -44,6 +44,62 @@ class DatabaseController
       return $date->format(\DateTime::W3C);
    }// End of formatDate method
 
+   public function subscribe($email, $ipaddress)
+   {
+      $stmt = $this->conn->prepare("SELECT email, status, token FROM email_subscriptions WHERE email = :email");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array("email" => $email));
+      if ($res === FALSE) return FALSE;
+
+      $results = $stmt->fetchAll();
+      if (count($results) !== 0 && (int)$results[0]['status'] === 1) return $results[0]['token'];
+      if (count($results) !== 0 && (int)$results[0]['status'] === 2) return 2;
+
+      $token = sha1($email . time());
+      if (count($results) !== 0 && (int)$results[0]['status'] === 0)
+      {
+         $stmt = $this->conn->prepare("UPDATE email_subscriptions SET status=1, token=:token WHERE email = :email");
+         return $stmt->execute(array("email" => $email, "token" => $token)) ? $token : FALSE;
+      }// End of if
+      else
+      {
+         $stmt = $this->conn->prepare('INSERT INTO email_subscriptions (email, status, ipaddress, token) VALUES (:email, 1, :ipaddress, :token)');
+         return $stmt->execute(array(
+            'email' => $email,
+            'ipaddress' => $ipaddress,
+            'token' => $token
+         )) ? $token : FALSE;
+      }
+   }// End of subscribe method
+
+   public function confirmEmail($token)
+   {
+      $stmt = $this->conn->prepare("SELECT email, status FROM email_subscriptions WHERE token = :token");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array("token" => $token));
+      if ($res === FALSE) return FALSE;
+      $results = $stmt->fetchAll();
+
+      if (count($results) === 0) return FALSE;
+
+      $stmt = $this->conn->prepare("UPDATE email_subscriptions SET status=2, token='' WHERE token = :token");
+      return $stmt->execute(array("token" => $token));
+   }// End of confirmEmail method
+
+   public function unsubscribe($email)
+   {
+      $stmt = $this->conn->prepare("SELECT email, status FROM email_subscriptions WHERE email = :email");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array("email" => $email));
+      if ($res === FALSE) return FALSE;
+      $results = $stmt->fetchAll();
+
+      if (count($results) === 0 || (int)$results[0]['status'] !== 2) return 1;
+
+      $stmt = $this->conn->prepare("UPDATE email_subscriptions SET status=0, token='' WHERE email = :email");
+      return $stmt->execute(array("email" => $email));
+   }// End of unsubscribe method
+
    public function getReviewsForOutlet($outlet_id)
    {
       $stmt = $this->conn->prepare("SELECT id, reviewer_name, review, date FROM outlet_reviews WHERE outlet_id = :outlet_id");

@@ -39,13 +39,19 @@ angular
                 templateUrl: 'views/OutletDetails.html',
                 controller: 'OutletDetails'
             })
-            .when('/email-subscribe', {
+            .when('/email/subscribe', {
                 templateUrl: 'views/EmailSubscribe.html',
                 controller: 'EmailSubscribe'
             })
-            .when('/email-unsubscribe', {
+            .when('/email/unsubscribe', {
                 templateUrl: 'views/EmailUnsubscribe.html',
                 controller: 'EmailUnsubscribe'
+            })
+            .when('/email/confirmed', {
+                templateUrl: 'views/EmailConfirmed.html'
+            })
+            .when('/email/confirmation-error', {
+                templateUrl: 'views/EmailConfirmationError.html'
             })
             .otherwise({
                 templateUrl: 'views/NotFound.html'

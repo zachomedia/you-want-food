@@ -29,15 +29,12 @@ angular
             YouWantFoodAPI.subscribe().post({
                 email: $scope.email
             }, function(response) {
-                if (response.success) {
-                    $scope.success = "You are now subscribed to daily emails.";
-                    $scope.error = "";
-                    
-                    $scope.email = "";
-                } else {
-                    $scope.success = "";
-                    $scope.error = response.error;
-                }
+                $scope.error = "";
+                $scope.success = "A confirmation email has been sent to you. After confirming your subscription, you will receive daily emails from You Want Food.";
+                $scope.email = "";
+            }, function(response) {
+                $scope.success = "";
+                $scope.error = response.data.error || "Sorry, an unexpected error occurred.";
             });
         }
     }]);

@@ -29,16 +29,12 @@ angular
             YouWantFoodAPI.unsubscribe().post({
                 email: $scope.email
             }, function(response) {
-                console.log(response);
-                if (response.success) {
-                    $scope.success = "You are now unsubscribed from daily emails.";
-                    $scope.error = "";
-                    
-                    $scope.email = "";
-                } else {
-                    $scope.success = "";
-                    $scope.error = response.error;
-                }
+                $scope.error = "";
+                $scope.success = "You will no longer receive daily emails from You Want Food.";
+                $scope.email = "";
+            }, function(response) {
+                $scope.success = "";
+                $scope.error = response.data.error || "Sorry, an unexpected error occurred.";;
             });
         }
     }]);

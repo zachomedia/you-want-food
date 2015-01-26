@@ -28,11 +28,16 @@ require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/config.php');
 
 $app = new \Silex\Application();
-$app['debug'] = false;
+$app['debug'] = true;
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
+$app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
 $app['database.controller'] = $app->share(function() {
    return new Controller\DatabaseController(DATABASE_HOSTNAME, DATABASE_PORT, DATABASE_DB, DATABASE_USER, DATABASE_PASSWORD);
+});
+
+$app['email.controller'] = $app->share(function() {
+   return new Controller\EmailController(EMAIL_HOSTNAME, EMAIL_PORT, EMAIL_SSL, EMAIL_USER, EMAIL_PASSWORD, json_decode(EMAIL_FROM, true));
 });
 
 $app['frontend.controller'] = $app->share(function() {
@@ -44,7 +49,7 @@ $app['uwaterloo-api.controller'] = $app->share(function() {
 });
 
 $app['email-subscription.controller'] = $app->share(function($app) {
-   return new Controller\EmailSubscriptionController($app['database.controller']);
+   return new Controller\EmailSubscriptionController($app['database.controller'], $app['email.controller']);
 });
 
 $app['reviews.controller'] = $app->share(function($app) {
@@ -59,8 +64,22 @@ $app->get('/', "frontend.controller:frontendAction");
 $app->get('/about', "frontend.controller:frontendAction");
 $app->get('/outlet/{outlet_id}', "frontend.controller:frontendAction")
    ->assert('outlet_id', '\d+');
-$app->get('/email-subscribe', "frontend.controller:frontendAction");
-$app->get('/email-unsubscribe', "frontend.controller:frontendAction");
+$app->get('/email/subscribe', "frontend.controller:frontendAction")
+   ->bind('/email/subscribe');
+$app->get('/email-subscribe', function() use($app) {
+   return $app->redirect($app['url_generator']->generate('/email/subscribe'), 301);
+});
+$app->get('/email/unsubscribe', "frontend.controller:frontendAction")
+   ->bind('/email/unsubscribe');
+$app->get('/email-unsubscribe', function() use($app) {
+   return $app->redirect($app['url_generator']->generate('/email/unsubscribe'), 301);
+});
+$app->get('/email/confirmed', "frontend.controller:frontendAction")
+   ->bind('/email/confirmed');
+$app->get('/email/confirmation-error', "frontend.controller:frontendAction")
+   ->bind('/email/confirmation-error');
+
+$app->get('/email/confirm/{token}', "email-subscription.controller:confirmAction");
 
 $app->get('/api/outlets.json', "uwaterloo-api.controller:outletsAction");
 $app->get('/api/menu.json', "uwaterloo-api.controller:menuAction");

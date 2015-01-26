@@ -1,7 +1,8 @@
 {
     "require": {
         "silex/silex": "~1.2",
-        "parsecsv/php-parsecsv": "0.4.5"
+        "parsecsv/php-parsecsv": "0.4.5",
+        "swiftmailer/swiftmailer": "@stable"
     },
     "autoload": {
        "psr-4": {
