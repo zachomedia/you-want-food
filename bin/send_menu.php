@@ -39,13 +39,6 @@ function today_hours($opening, $special, $closed)
     return Array('opening_hour' => $today_start, 'closing_hour' => $today_end, 'is_closed' => $today_closed);
 }// End of today_hours function
 
-// sendEmail($to, $contents) Sends an HTML email to $to with the contents $contents
-function sendEmail($to, $contents)
-{
-    global $config;
-    return mail($to, "Daily Menu: You Want Food", $contents, "From: " . $config['FROM_EMAIL'] . "\r\nContent-Type: text/html\r\n");
-}// End of sendEmail function
-
 function getOutletById($id, $outlets)
 {
     foreach($outlets as $outlet)
@@ -60,107 +53,96 @@ function getOutletById($id, $outlets)
 // generateMenuHTML($menu) Generates the HTML for the $menu.
 function generateMenuHTML($outlets, $menu)
 {
+   $today = date('l, F jS, Y');
+   $html = <<<EOM
 
-    $email = "<div style='font-family: sans-serif;'>";
-    $email .= "<div style='background: #333; color: white; padding: 3px 15px;'><h1>You Want Food &ndash; Daily Menu</h1></div>";
+<div style="font-family: sans-serif">
 
-    /** OUTLETS AND MENU **/
-    $email .= "<div><h2>Outlets</h2>";
+   <div id="header" style="padding: 10px; text-align: center;">
+      <h1>You Want Food &mdash; Today's Menu</h1>
+      <p>$today</p>
+      <p><a href="https://zacharyseguin.ca/projects/you-want-food/" style="text-decoration: none; color: #aa0000; padding: 10px;">Visit You Want Food</a></p>
+   </div>
 
-    foreach($menu as $outlet)
-    {
-        $email .= "<div style='border-left: 1px solid #eee; padding-left: 10px; margin-left: 5px;'>";
+   <div id="new-features" style="font-size: 0.9em; margin: 10px; padding: 10px;">
+      <h2>New Features</h2>
+      <p>You Want Food development continues, today launching a set of new features:</p>
 
-            $email .= "<h3>" . $outlet['outlet'] . "</h3>";
+      <div style="margin: 10px;">
+         <h3>Region of Waterloo Public Health Inspection Results</h3>
+         <p>The You Want Food web application now displays results from inspections by the Region of Waterloo Public Health.</p>
+         <p>To view inspection results, view an outlet's details and select the "Public Health Inspections" tab.</p>
+      </div>
 
-            $outlet_info = getOutletById($outlet['outlet_id'], $outlets);
+      <div style="margin: 10px;">
+         <h3>Updated Menu Email</h3>
+         <p>The daily menu email has been given a new look. Don't hesitate to pass any feedback to <a href="mailto:you-want-food@zacharyseguin.ca">you-want-food@zacharyseguin.ca</a>.</p>
+      </div>
+   </div>
 
-            if ($outlet_info != null)
-            {
-                $email .= "<div style='font-size: .8em; padding: 0px; color: #555;'>";
-                    if (isset($outlet_info['notice']))
-                    {
-                        $email .= "<p style='font-weight: bold;'>" . $outlet_info['notice'] . "</p>";
-                    }// End of if
+   <hr>
 
-                    $email .= "<p>";
+EOM;
 
-                        $today = today_hours($outlet_info['opening_hours'], $outlet_info['special_hours'], $outlet_info['dates_closed']);
-                        if ($today['is_closed'])
-                        {
-                            $email .= "<b>Closed Today</b>";
-                        }// End of if
-                        else
-                        {
-                            $email .= "Open today: " . date('g:ia', $today['opening_hour']) . " &ndash; " . date('g:ia', $today['closing_hour']);
-                        }// End of else
+foreach ($menu as $outlet)
+{
+   $outlet_details = getOutletById($outlet['outlet_id'], $outlets);
 
-                        $email .= " | ";
-                        $email .= "<a href='https://zacharyseguin.ca/projects/you-want-food/outlet/" . $outlet_info['outlet_id'] . "' style='color: #aa0000;'>Outlet Details</a>";
+   $hours = today_hours($outlet_details['opening_hours'], $outlet_details['special_hours'], $outlet_details['dates_closed']);
+   $hours_string = ($hours['is_closed']) ? "<b>CLOSED TODAY</b>" : "<b>OPEN</b>: " . date('g:ia', $hours['opening_hour']) . " &ndash; " . date('g:ia', $hours['closing_hour']);
 
-                    $email .= "</p>";
-                $email .= "</div>";
-            }// End of if
+   $html .= <<<EOM
 
-            $email .= "<h4>Lunch</h4>";
+      <div style=" background: #f4f4f4; padding: 10px; margin: 10px; border: 1px solid #eee; border-left: 6px solid #eee;">
 
-            if (empty($outlet['lunch']))
-            {
-                $email .= "<p style='color: #555;'>No menu was provided for this meal.</p>";
-            }// End of if
-            else
-            {
-                $email .= "<ul style='list-style: square; color: #555;'>";
+         <h2>{$outlet['outlet']}</h2>
+         <p style="font-size: 0.9em">$hours_string | <a href="https://zacharyseguin.ca/projects/you-want-food/outlet/{$outlet['outlet_id']}" style="color: #aa0000;">Outlet Details</a></p>
+         <p style="font-weight: bold">{$outlet_details['notice']}</p>
 
-                    foreach($outlet['lunch'] as $meal)
-                    {
-                        $email .= "<li>" . $meal['product_name'];
-                        if (!empty($meal['diet_type']))
-                        {
-                            $email .= " <small> &ndash; " . $meal['diet_type'] . "</small>";
-                        }// End of if
+EOM;
 
-                        $email .= "</li>";
-                    }// End of foreach
+   $lunch = $outlet['lunch'];
+   $html .= "<div><h3>Lunch</h3><ul style='list-style: square;'>";
 
-                $email .= "</ul>";
-            }// End of else
+   foreach ($lunch as $meal)
+   {
+      $diet_type_string = (!empty($meal['diet_type'])) ? "[{$meal['diet_type']}]" : "";
+      $html .= <<<EOM
 
-            $email .= "<h4>Dinner</h4>";
+         <li style="margin: 5px 0;">{$meal['product_name']} $diet_type_string</li>
 
-            if (empty($outlet['dinner']))
-            {
-                $email .= "<p style='color: #555;'>No menu was provided for this meal.</p>";
-            }// End of if
-            else
-            {
-                $email .= "<ul style='list-style: square; color: #555;'>";
+EOM;
+   }// End of foreach
+   if (count($lunch) === 0) $html .= "Sorry, no menu was provided for this meal.";
+   $html .= "</ul></div>";
 
-                    foreach($outlet['dinner'] as $meal)
-                    {
-                        $email .= "<li>" . $meal['product_name'];
-                        if (!empty($meal['diet_type']))
-                        {
-                            $email .= " <small> &ndash; " . $meal['diet_type'] . "</small>";
-                        }// End of if
+   $dinner = $outlet['dinner'];
+   $html .= "<div><h3>Dinner</h3><ul style='list-style: square;'>";
 
-                        $email .= "</li>";
-                    }// End of foreach
+   foreach ($dinner as $meal)
+   {
+      $diet_type_string = (!empty($meal['diet_type'])) ? "[{$meal['diet_type']}]" : "";
+      $html .= <<<EOM
 
-                $email .= "</ul>";
-            }// End of else
+         <li style="margin: 5px 0;">{$meal['product_name']} $diet_type_string</li>
 
-        $email .= "</div>";
-    }// End of foreach
+EOM;
+   }// End of foreach
+   if (count($dinner) === 0) $html .= "Sorry, no menu was provided for this meal.";
+   $html .= "</ul></div>";
 
-    $email .= "</div>";
+   $html .= "<p style='font-weight: bold'>" . $outlet['notes'] . "</p>";
 
-    /** FOOTER **/
-    $email .= "<p style='border-top: 1px solid #eee; padding-top: 10px; margin-bottom: 0px; color: #aaa; font-size: .8em;'>You are receiving this email because this email address was subscribed at <a href='https://zacharyseguin.ca/projects/you-want-food/' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/</a>.</p>";
-    $email .= "<p style='margin-top: 3px; color: #aaa; font-size: .8em;'>To stop receiving these emails, please visit <a href='https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe</a>.</p>";
+   $html .= "</div>";
+}// End of foreach
 
-    $email .= "</div>";
-    return $email;
+   $html .= <<<EOM
+      <p style='padding-top: 10px; margin-bottom: 0px; color: #888; font-size: .8em; text-align: center;'>You are receiving this email because this email address was subscribed at <a href='https://zacharyseguin.ca/projects/you-want-food/' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/</a>.</p>
+      <p style='margin-top: 3px; color: #888; font-size: .8em; text-align: center;'>To stop receiving these emails, please visit <a href='https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe</a>.</p>
+</div>
+EOM;
+
+   return $html;
 }// End of generateMenuHTML function
 
 // Initialize
@@ -201,6 +183,8 @@ foreach ($menu['outlets'] as $outlet)
 
         if (!empty($day['notes']))
             $outlet_menu['notes'] = $day['notes'];
+        else
+           $outlet_menu['notes'] = '';
     }// End of foreach
 
     $today_menu[] = $outlet_menu;
@@ -214,6 +198,6 @@ $menu_html = generateMenuHTML($outlets, $today_menu);
 
 foreach ($subscribers as $s)
 {
-   if (!$email->sendEmail($s['email'], "You Want Food - Today's Menu", $menu_html))
+   if (!$email->sendEmail($s['email'], "You Want Food - Today's Menu", $menu_html, "Sorry, menu is only available in HTML format. Visit https://zacharyseguin.ca/proejcts/you-want-food/ for menu information."))
       echo "Failed to send email to: " . $s['email'] . "\n";
 }// End of foreach

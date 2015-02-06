@@ -49,12 +49,13 @@ class EmailController
       $this->from = $from;
    }// End of constructor method
 
-   public function sendEmail($email, $subject, $body)
+   public function sendEmail($email, $subject, $body, $plain = "")
    {
       $message = Swift_Message::newInstance();
       $message->setSubject($subject);
       $message->setFrom($this->from);
       $message->setTo($email);
+      $message->setBody($plain);
       $message->addPart($body, "text/html");
       return $this->mailer->send($message);
    }// End of sendEmail function
