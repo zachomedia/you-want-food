@@ -45,9 +45,10 @@ define('UWATERLOO_API_BASE', 'https://api.uwaterloo.ca/v2');
 define('EMAIL_HOSTNAME', 'mail.example.com');
 define('EMAIL_PORT', 587);
 define('EMAIL_SSL', 'tls');
-define('EMAIL_USER', 'example');
+define('EMAIL_USER', 'example@example.com');
 define('EMAIL_PASSWORD', 'secure_password');
 define('EMAIL_FROM', json_encode(array('noreply-youwantfood@example.com' => 'You Want Food by Zachary Seguin')));
 
-define('ACTIVATION_LINK', 'https://zacharyseguin.ca/projects/you-want-food/email/confirm/$1');
+define('APP_BASE', 'https://zacharyseguin.ca/projects/you-want-food/');
+define('MODERATOR_EMAIL', 'example@example.com');
 ?>
