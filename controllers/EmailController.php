@@ -60,6 +60,28 @@ class EmailController
       return $this->mailer->send($message);
    }// End of sendEmail function
 
+   public function sendOutletReviewAddedEmail($moderator_email, $outlet_id, $name, $email, $review, $ipaddress, $moderation_token)
+   {
+      $rejectLink = str_replace("$1", $moderation_token, str_replace("$1", $moderation_token, APP_BASE . "reviews/outlets/reject/$1"));
+
+      $message = Swift_Message::newInstance();
+      $message->setSubject("[Outlet Review] Outlet Review Added");
+      $message->setFrom($this->from);
+      $message->setTo($moderator_email);
+
+      $body = "";
+      $body .= "Outlet: $outlet_id\n";
+      $body .= "Reviewer: $name ($email)\n";
+      $body .= "Submitted From: $ipaddress\n";
+      $body .= "Review:\n$review\n";
+      $body .= "\n";
+
+      $body .="Reject: $rejectLink\n";
+
+      $message->setBody($body);
+      return $this->mailer->send($message);
+   }// End of sendReviewAddedEmail function
+
    public function sendConfirmationEmail($email, $token)
    {
       $message = Swift_Message::newInstance();
@@ -67,7 +89,7 @@ class EmailController
       $message->setFrom($this->from);
       $message->setTo($email);
 
-      $activationLink = str_replace("$1", $token, ACTIVATION_LINK);
+      $activationLink = str_replace("$1", $token, APP_BASE . "email/confirm/$1");
 
       $body = "YOU WANT FOOD - SUBSCRIPTION CONFIRMATION\n";
       $body .= "\n";

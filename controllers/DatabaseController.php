@@ -82,6 +82,8 @@ class DatabaseController
 
    public function confirmEmail($token)
    {
+      if (strlen($token) === 0) return FALSE;
+
       $stmt = $this->conn->prepare("SELECT email, status FROM email_subscriptions WHERE token = :token");
       $stmt->setFetchMode(\PDO::FETCH_ASSOC);
       $res = $stmt->execute(array("token" => $token));
@@ -108,11 +110,11 @@ class DatabaseController
       return $stmt->execute(array("email" => $email));
    }// End of unsubscribe method
 
-   public function getReviewsForOutlet($outlet_id)
+   public function getReviewsForOutlet($outlet_id, $moderation_status = 1)
    {
-      $stmt = $this->conn->prepare("SELECT id, reviewer_name, review, date FROM outlet_reviews WHERE outlet_id = :outlet_id");
+      $stmt = $this->conn->prepare("SELECT id, reviewer_name, review, date FROM outlet_reviews WHERE outlet_id = :outlet_id AND moderation_status = :moderation_status");
       $stmt->setFetchMode(\PDO::FETCH_ASSOC);
-      $res = $stmt->execute(array("outlet_id" => $outlet_id));
+      $res = $stmt->execute(array("outlet_id" => $outlet_id, "moderation_status" => $moderation_status));
       if ($res === FALSE) return FALSE;
 
       $results = $stmt->fetchAll();
@@ -129,16 +131,35 @@ class DatabaseController
 
    public function addOutletReview($outlet_id, $name, $email, $review, $ipaddress)
    {
-      $stmt = $this->conn->prepare('INSERT INTO outlet_reviews (outlet_id, reviewer_name, reviewer_email, review, ipaddress) VALUES (:outlet_id, :reviewer_name, :reviewer_email, :review, :ipaddress)');
+      $moderation_token = sha1($outlet_id . $email . $ipaddress . time());
 
-      return $stmt->execute(array(
+      $stmt = $this->conn->prepare('INSERT INTO outlet_reviews (outlet_id, reviewer_name, reviewer_email, review, ipaddress, moderation_token) VALUES (:outlet_id, :reviewer_name, :reviewer_email, :review, :ipaddress, :moderation_token)');
+
+      return ($stmt->execute(array(
          'outlet_id' => $outlet_id,
          'reviewer_name' => utf8_encode($name),
          'reviewer_email' => utf8_encode($email),
          'review' => utf8_encode($review),
-         'ipaddress' => $ipaddress
-      ));
+         'ipaddress' => $ipaddress,
+         'moderation_token' => $moderation_token
+      ))) ? $moderation_token : FALSE;
    }// End of addOutletReview method
+
+   public function rejectOutletReview($moderation_token)
+   {
+      if (strlen($moderation_token) === 0) return FALSE;
+
+      $stmt = $this->conn->prepare("SELECT moderation_status FROM outlet_reviews WHERE moderation_token = :moderation_token");
+      $stmt->setFetchMode(\PDO::FETCH_ASSOC);
+      $res = $stmt->execute(array("moderation_token" => $moderation_token));
+      if ($res === FALSE) return FALSE;
+      $results = $stmt->fetchAll();
+
+      if (count($results) === 0) return FALSE;
+
+      $stmt = $this->conn->prepare("UPDATE outlet_reviews SET moderation_status=-1 WHERE moderation_token = :moderation_token");
+      return $stmt->execute(array("moderation_token" => $moderation_token));
+   }// End of confirmEmail method
 
    public function getInspectionsFacilities()
    {

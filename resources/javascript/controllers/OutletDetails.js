@@ -38,11 +38,14 @@ angular
         }
 
         $scope.postReview = function() {
+            $scope.busy = true;
             YouWantFoodAPI.addOutletReview($scope.outlet.outlet_id).post($scope.review, function(response) {
                 $scope.reviews = YouWantFoodAPI.outletReviews($scope.outlet.outlet_id).get();
                 $scope.review = {};
+                $scope.busy = false;
             }, function(error) {
                 $scope.review.error = error.data.error || "Sorry, an unexpected error occurred.";
+                $scope.busy = false;
             });
         }
 

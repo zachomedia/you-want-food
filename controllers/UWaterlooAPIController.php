@@ -67,6 +67,20 @@ class UWaterlooAPIController
       return $this->executeRequest("/foodservices/locations");
    }// End of getOutlets method
 
+   public function getOutlet($outlet_id)
+   {
+      $outlets = $this->getOutlets();
+      foreach ($outlets as $outlet)
+      {
+         if ($outlet['outlet_id'] === (int)$outlet_id)
+         {
+            return $outlet;
+         }// End of if
+      }// End of foreach
+
+      return FALSE;
+   }// End of getOutlet method
+
    public function getMenu()
    {
       return $this->executeRequest("/foodservices/menu");

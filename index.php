@@ -28,7 +28,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/config.php');
 
 $app = new \Silex\Application();
-$app['debug'] = false;
+$app['debug'] = true;
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
@@ -53,7 +53,7 @@ $app['email-subscription.controller'] = $app->share(function($app) {
 });
 
 $app['reviews.controller'] = $app->share(function($app) {
-   return new Controller\ReviewsController($app['database.controller']);
+   return new Controller\ReviewsController($app['database.controller'], $app['email.controller']);
 });
 
 $app['inspections.controller'] = $app->share(function($app) {
@@ -93,6 +93,7 @@ $app->get('/api/reviews/outlet/{outlet_id}.json', 'reviews.controller:outletActi
    ->assert('outlet_id', '\d+');
 $app->post('/api/reviews/outlet/{outlet_id}/add.json', 'reviews.controller:addOutletReviewAction')
    ->assert('outlet_id', '\d+');
+$app->get('/reviews/outlets/reject/{moderation_token}', 'reviews.controller:rejectOutletReviewAction');
 
 $app->get('/api/inspections/facilities.json', 'inspections.controller:facilitiesAction');
 $app->get('/api/inspections/facility/{facility_id}.json', 'inspections.controller:facilityAction');

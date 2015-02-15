@@ -33,10 +33,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ReviewsController
 {
    private $db;
+   private $email;
 
-   public function __construct(DatabaseController $db)
+   public function __construct(DatabaseController $db, EmailController $email)
    {
       $this->db = $db;
+      $this->email = $email;
    }// End of constructor method
 
    private function getPostData(Request $request)
@@ -67,14 +69,29 @@ class ReviewsController
       $data['review'] = trim($data['review']);
 
       if (strlen($data['name']) === 0) return new JsonResponse(array("error" => "Please provide your name."), 400);
-      if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) return new JsonResponse(array("error" => "Please provide a valid email address. Your email address will not be show publicly."), 400);
+      if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) return new JsonResponse(array("error" => "Please provide a valid email address. Your email address will not be shown publicly."), 400);
       if (strlen($data['review']) === 0) return new JsonResponse(array("error" => "Please provide a review."), 400);
 
       $res = $this->db->addOutletReview($outlet_id, $data['name'], $data['email'], $data['review'], $request->getClientIp());
 
-      if ($res !== FALSE) return new Response("");
+      if ($res !== FALSE)
+      {
+         $this->email->sendOutletReviewAddedEmail(MODERATOR_EMAIL, $outlet_id, $data['name'], $data['email'], $data['review'], $request->getClientIp(), $res);
+         return new Response("");
+      }// End of if
+
       return new JsonResponse(array("error" => "Sorry, an unexpected error ocurred."), 500);
    }// End of addOutletReviewAction method
+
+   public function rejectOutletReviewAction($moderation_token)
+   {
+      if (strlen($token) === 0) new Response("Sorry, an error occured rejecting the review.", 500);
+
+      if ($this->db->rejectOutletReview($moderation_token))
+         return new Response("Outlet review has been rejected and will no longer be shown publicly.");
+      else
+         return new Response("Sorry, an error occured rejecting the review.", 500);
+   }// End of rejectOutletReviewAction method
 }// End of ReviewsController class
 
 ?>
