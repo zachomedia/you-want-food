@@ -121,6 +121,10 @@ a {
    padding-left: 5px !important;
 }
 
+.outlet-hours {
+    font-size: 0.9em;
+}
+
 .outlet-hours h3 {
     text-align: center;
 }
