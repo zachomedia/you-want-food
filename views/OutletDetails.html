@@ -102,7 +102,7 @@
                    </tr>
                 </thead>
                 <tbody>
-                       <tr ng-repeat-start="inspection in inspections.inspections | orderBy:'inspection_date':true" ng-class="{last: $last, today: isToday($index) }">
+                       <tr ng-repeat-start="inspection in inspections.inspections | orderBy:'inspection_date':true" ng-class="{last: $last}">
                            <th>{{inspection.inspection_date | date:'longDate'}}</th>
                            <td>{{inspection.inspection_type}}</td>
                            <td>{{inspection.actions}}</td>
@@ -111,7 +111,7 @@
                            <td colspan="3">
                                <table>
                                    <tbody style="font-size: 0.9em">
-                                       <tr ng-repeat="infraction in inspection.infractions">
+                                       <tr ng-repeat="infraction in inspection.infractions" ng-class="{last: $last}">
                                            <th style="width: 120px; vertical-align: middle; padding-right: 5px;">{{infraction.type}}</th>
                                            <td>{{infraction.category_code || infraction.description}} <br><b>{{infraction.letter_code}}</b></td>
                                        </tr>
