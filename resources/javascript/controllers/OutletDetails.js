@@ -106,4 +106,6 @@ angular
         }, function(reason) {
             console.log(reason);
         });
+
+        $scope.scrollTo('content');
     }]);
