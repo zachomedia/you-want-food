@@ -53,6 +53,9 @@ angular
             .when('/email/confirmation-error', {
                 templateUrl: 'views/EmailConfirmationError.html'
             })
+            .when('/error', {
+                templateUrl: 'views/Error.html'
+            })
             .otherwise({
                 templateUrl: 'views/NotFound.html'
             });

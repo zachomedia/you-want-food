@@ -28,7 +28,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/config.php');
 
 $app = new \Silex\Application();
-$app['debug'] = true;
+$app['debug'] = false;
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new \Silex\Provider\UrlGeneratorServiceProvider());
 
@@ -61,6 +61,10 @@ $app['inspections.controller'] = $app->share(function($app) {
 });
 
 $app->get('/', "frontend.controller:frontendAction");
+$app->get('/not-found', "frontend.controller:frontendAction")
+      ->bind('/not-found');
+$app->get('/error', "frontend.controller:frontendAction")
+      ->bind('/error');
 $app->get('/about', "frontend.controller:frontendAction");
 $app->get('/outlet/{outlet_id}', "frontend.controller:frontendAction")
    ->assert('outlet_id', '\d+');
@@ -99,6 +103,14 @@ $app->get('/api/inspections/facilities.json', 'inspections.controller:facilities
 $app->get('/api/inspections/facility/{facility_id}.json', 'inspections.controller:facilityAction');
 $app->get('/api/inspections/uwaterloo/{uwaterloo_id}.json', 'inspections.controller:uwaterlooAction')
    ->assert('uwaterloo_id', '\d+');
+
+$app->error(function (\Exception $e, $code) use ($app) {
+   if ($code == 404) {
+      return $app->redirect($app['url_generator']->generate('/not-found'));
+   } else {
+      return $app->redirect($app['url_generator']->generate('/error'));
+   }// End of if
+});
 
 $app->run();
 

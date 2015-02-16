@@ -1,168 +1,174 @@
-<h1 ng-hide="outlet.outlet_name == null" class="title">{{outlet.outlet_name}}</h1>
-<h1 ng-show="outlet.outlet_name == null" class="title">Name Unavailable</h1>
+<div ng-show="loaded">
+   <h1 ng-hide="outlet.outlet_name == null" class="title">{{outlet.outlet_name}}</h1>
+   <h1 ng-show="outlet.outlet_name == null" class="title">Name Unavailable</h1>
 
-<p class="outlet-logo"><img ng-src="{{outlet.logo}}" ng-hide="!outlet.logo" /></p>
+   <p class="outlet-logo"><img ng-src="{{outlet.logo}}" ng-hide="!outlet.logo" /></p>
 
-<p class="outlet-location" ng-show="outlet.building">Located in {{outlet.building}}.</p>
-<p class="outlet-description" ng-bind-html="outlet.description"></p>
+   <p class="outlet-location" ng-show="outlet.building">Located in {{outlet.building}}.</p>
+   <p class="outlet-description" ng-bind-html="outlet.description"></p>
 
-<section class="outlet-notice notice" ng-hide="!outlet.notice">
-   <h3>NOTICE</h3>
-   <p ng-bind-html="outlet.notice"></p>
-</section>
+   <section class="outlet-notice notice" ng-hide="!outlet.notice">
+      <h3>NOTICE</h3>
+      <p ng-bind-html="outlet.notice"></p>
+   </section>
 
-<tabset>
-   <tab>
-     <tab-heading>Hours of Operation</tab-heading>
-     <section class="outlet-hours">
-       <div>
-          <h3>Standard Hours</h3>
-          <table cellspacing="0">
-             <thead>
-                <tr class="header">
-                   <th>Week Day</th>
-                   <th>Open</th>
-                   <th>Close</th>
-                </tr>
-             </thead>
-             <tbody>
-                <tr ng-repeat="weekday in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']|orderBy:'order'" ng-class="{last: $last, today: isToday($index) }">
-                   <th>{{weekday}}</th>
-                   <td ng-show="outlet.opening_hours[weekday].opening_hour">{{outlet.opening_hours[weekday].opening_hour | time}}</td>
-                   <td ng-hide="outlet.opening_hours[weekday].opening_hour">&mdash;</td>
-                   <td ng-show="outlet.opening_hours[weekday].opening_hour">{{outlet.opening_hours[weekday].closing_hour | time}}</td>
-                   <td ng-hide="outlet.opening_hours[weekday].closing_hour">&mdash;</td>
-                </tr>
-             </tbody>
-          </table>
-       </div>
-       <div ng-show="outlet.special_hours[0]">
-          <h3>Special Hours</h3>
-          <ul>
-             <li ng-repeat="date in outlet.special_hours">
-                <b>{{date.date | date:'fullDate'}}</b><br />{{date.opening_hour}} - {{date.closing_hour}}
-             </li>
-          </ul>
-       </div>
-       <div ng-show="outlet.dates_closed[0]">
-          <h3>Dates Closed</h3>
-          <ul>
-             <li ng-repeat="date in outlet.dates_closed">{{date | date:'fullDate'}}</li>
-          </ul>
-       </div>
-     </section>
-   </tab>
-   <tab disabled="!menu[0] && !outlet.additional.menu_url">
-     <tab-heading>Menu</tab-heading>
-     <section class="menu" ng-show="outlet.additional.menu_url">
-         <p>The menu for this outlet is not available through Open Data. <a ng-href="{{outlet.additional.menu_url}}" target="_blank">View the menu</a>.</p>
-     </section>
-     <section class="menu" ng-show="menu[0]">
-       <article class="outlet_menu_day" ng-repeat="day in menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">
-          <h3>{{day.day}}</h3>
-
-          <article class="outlet_menu_meal">
-             <h4>Lunch</h4>
-
+   <tabset>
+      <tab>
+        <tab-heading>Hours of Operation</tab-heading>
+        <section class="outlet-hours">
+          <div>
+             <h3>Standard Hours</h3>
+             <table cellspacing="0">
+                <thead>
+                   <tr class="header">
+                      <th>Week Day</th>
+                      <th>Open</th>
+                      <th>Close</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr ng-repeat="weekday in ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']|orderBy:'order'" ng-class="{last: $last, today: isToday($index) && !special }">
+                      <th>{{weekday}}</th>
+                      <td ng-show="outlet.opening_hours[weekday].opening_hour">{{outlet.opening_hours[weekday].opening_hour | time}}</td>
+                      <td ng-hide="outlet.opening_hours[weekday].opening_hour">&mdash;</td>
+                      <td ng-show="outlet.opening_hours[weekday].opening_hour">{{outlet.opening_hours[weekday].closing_hour | time}}</td>
+                      <td ng-hide="outlet.opening_hours[weekday].closing_hour">&mdash;</td>
+                   </tr>
+                </tbody>
+             </table>
+          </div>
+          <div>
+             <h3>Special Hours</h3>
              <ul>
-                <li ng-repeat="item in day.meals.lunch">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
-                <p ng-hide="day.meals.lunch.length">No menu information</p>
+                <li ng-repeat="date in outlet.special_hours" ng-hide="inPast(date.date)" ng-class="{today: isToday(date.date)}">
+                   <b>{{date.date | toJSDate | date:'fullDate'}}</b><br />{{date.opening_hour | time}} - {{date.closing_hour | time}}
+                </li>
              </ul>
-          </article>
-
-          <article class="outlet_menu_meal">
-             <h4>Dinner</h4>
-
+          </div>
+          <div>
+             <h3>Dates Closed</h3>
              <ul>
-                <li ng-repeat="item in day.meals.dinner">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
-                <p ng-hide="day.meals.dinner.length">No menu information</p>
+                <li ng-repeat="date in outlet.dates_closed" ng-hide="inPast(date)" ng-class="{today: isToday(date)}">{{date | toJSDate | date:'fullDate'}}</li>
              </ul>
+          </div>
+        </section>
+      </tab>
+      <tab disabled="!menu[0] && !outlet.additional.menu_url">
+        <tab-heading>Menu</tab-heading>
+        <section class="menu" ng-show="outlet.additional.menu_url">
+            <p>The menu for this outlet is not available through Open Data. <a ng-href="{{outlet.additional.menu_url}}" target="_blank">View the menu</a>.</p>
+        </section>
+        <section class="menu" ng-show="menu[0]">
+          <article class="outlet_menu_day" ng-repeat="day in menu" ng-class="{ today: day.day.toLowerCase() == weekdays[today.getDay()] }">
+             <h3>{{day.day}}</h3>
+
+             <article class="outlet_menu_meal">
+                <h4>Lunch</h4>
+
+                <ul>
+                   <li ng-repeat="item in day.meals.lunch">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
+                   <p ng-hide="day.meals.lunch.length">No menu information</p>
+                </ul>
+             </article>
+
+             <article class="outlet_menu_meal">
+                <h4>Dinner</h4>
+
+                <ul>
+                   <li ng-repeat="item in day.meals.dinner">{{item.product_name}}<br /><span class="diet_type"><b>Diet Type:</b> {{item.diet_type || "n/a"}}</span></li>
+                   <p ng-hide="day.meals.dinner.length">No menu information</p>
+                </ul>
+             </article>
+
+                <section class="notice" ng-hide="{{!meal.notes}}"><p ng-bind-html="meal.notes"></p></section>
+             </article>
+
+             <section class="notice" ng-hide="{{!day.notes}}"><p ng-bind-html="day.notes"></p></section>
           </article>
+        </section>
+      </tab>
+      <tab>
+        <tab-heading>Public Health Inspections</tab-heading>
+        <section class="inspections">
+           <p>If you have any questions or concerns regarding a food outlet on campus, contact <a href="./outlet/148">Food Services Administration</a> or <a href="http://checkit.regionofwaterloo.ca/portal/Home/Contact" target="_blank">Region of Waterloo Public Health</a>.</p>
 
-             <section class="notice" ng-hide="{{!meal.notes}}"><p ng-bind-html="meal.notes"></p></section>
-          </article>
+          <div>
+             <table cellspacing="0">
+                <thead>
+                   <tr class="header">
+                      <th>Date</th>
+                      <th>Type</th>
+                      <th>Actions</th>
+                   </tr>
+                </thead>
+                <tbody>
+                       <tr ng-repeat-start="inspection in inspections.inspections | orderBy:'inspection_date':true" ng-class="{last: $last, today: isToday($index) }">
+                           <th>{{inspection.inspection_date | date:'longDate'}}</th>
+                           <td>{{inspection.inspection_type}}</td>
+                           <td>{{inspection.actions}}</td>
+                       </tr>
+                       <tr ng-repeat-end ng-show="inspection.infractions">
+                           <td colspan="3">
+                               <table>
+                                   <tbody style="font-size: 0.9em">
+                                       <tr ng-repeat="infraction in inspection.infractions">
+                                           <th style="width: 120px; vertical-align: middle; padding-right: 5px;">{{infraction.type}}</th>
+                                           <td>{{infraction.category_code || infraction.description}} <br><b>{{infraction.letter_code}}</b></td>
+                                       </tr>
+                                   </tbody>
+                               </table>
+                           </td>
+                       </tr>
+                   </ng-repeat>
+                </tbody>
+             </table>
+             <p ng-hide="inspections.inspections">There are no inspections for this outlet.</p>
+          </div>
+        </section>
+      </tab>
+      <tab>
+        <tab-heading>Reviews</tab-heading>
 
-          <section class="notice" ng-hide="{{!day.notes}}"><p ng-bind-html="day.notes"></p></section>
-       </article>
-     </section>
-   </tab>
-   <tab>
-     <tab-heading>Public Health Inspections</tab-heading>
-     <section class="inspections">
-        <p>If you have any questions or concerns regarding a food outlet on campus, contact <a href="./outlet/148">Food Services Administration</a> or <a href="http://checkit.regionofwaterloo.ca/portal/Home/Contact" target="_blank">Region of Waterloo Public Health</a>.</p>
+        <section class="outlet-reviews">
+           <p>Have you eaten here? <a ng-click="scrollTo('post-review')">Write a review now</a> to share your experience with others.</p>
 
-       <div>
-          <table cellspacing="0">
-             <thead>
-                <tr class="header">
-                   <th>Date</th>
-                   <th>Type</th>
-                   <th>Actions</th>
-                </tr>
-             </thead>
-             <tbody>
-                    <tr ng-repeat-start="inspection in inspections.inspections | orderBy:'inspection_date':true" ng-class="{last: $last, today: isToday($index) }">
-                        <th>{{inspection.inspection_date | date:'longDate'}}</th>
-                        <td>{{inspection.inspection_type}}</td>
-                        <td>{{inspection.actions}}</td>
-                    </tr>
-                    <tr ng-repeat-end ng-show="inspection.infractions">
-                        <td colspan="3">
-                            <table>
-                                <tbody style="font-size: 0.9em">
-                                    <tr ng-repeat="infraction in inspection.infractions">
-                                        <th style="width: 120px; vertical-align: middle; padding-right: 5px;">{{infraction.type}}</th>
-                                        <td>{{infraction.category_code || infraction.description}} <br><b>{{infraction.letter_code}}</b></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </ng-repeat>
-             </tbody>
-          </table>
-          <p ng-hide="inspections.inspections">There are no inspections for this outlet.</p>
-       </div>
-     </section>
-   </tab>
-   <tab>
-     <tab-heading>Reviews</tab-heading>
+           <article class="review" ng-repeat="review in reviews | orderBy:'date':true">
+              <h2>{{review.reviewer_name}}</h2>
+              <p class="meta">{{review.date | stringToDate | date:'fullDate'}} at {{review.date | stringToDate | date:'shortTime'}}</p>
+              <p ng-bind-html="review.review | htmlify"></p>
+           </article>
 
-     <section class="outlet-reviews">
-        <p>Have you eaten here? <a ng-click="scrollTo('post-review')">Write a review now</a> to share your experience with others.</p>
+           <p ng-hide="reviews.length > 0">There are no reviews for this outlet.</p>
 
-        <article class="review" ng-repeat="review in reviews | orderBy:'date':true">
-           <h2>{{review.reviewer_name}}</h2>
-           <p class="meta">{{review.date | stringToDate | date:'fullDate'}} at {{review.date | stringToDate | date:'shortTime'}}</p>
-           <p ng-bind-html="review.review | htmlify"></p>
-        </article>
+           <article id="post-review" class="review">
+              <h2>Write a Review</h2>
 
-        <p ng-hide="reviews.length > 0">There are no reviews for this outlet.</p>
+              <form ng-submit="postReview()">
+                 <p class="error" ng-show="review.error">{{review.error}}</p>
 
-        <article id="post-review" class="review">
-           <h2>Write a Review</h2>
+                 <br>
 
-           <form ng-submit="postReview()">
-              <p class="error" ng-show="review.error">{{review.error}}</p>
+                 <label for="name">Name</label>
+                 <input type="text" id="name" name="name" placeholder="ex. John Doe" required ng-model="review.name">
 
-              <br>
+                 <br><br>
 
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="ex. John Doe" required ng-model="review.name">
+                 <label for="email">Email <span style="font-size: 0.7em">(will not be shown)</span></label>
+                 <input type="email" id="email" name="email" placeholder="example@example.com" required ng-model="review.email">
 
-              <br><br>
+                 <br><br>
 
-              <label for="email">Email <span style="font-size: 0.7em">(will not be shown)</span></label>
-              <input type="email" id="email" name="email" placeholder="example@example.com" required ng-model="review.email">
+                 <label for="review">Review</label>
+                 <textarea id="review" name="review" ng-model="review.review"></textarea>
 
-              <br><br>
-
-              <label for="review">Review</label>
-              <textarea id="review" name="review" ng-model="review.review"></textarea>
-
-              <input type="submit" value="Post Review" ng-disabled="busy">
-            </form>
-        </article>
-     </section>
-   </tab>
-</tabset>
+                 <input type="submit" value="Post Review" ng-disabled="busy">
+               </form>
+           </article>
+        </section>
+      </tab>
+   </tabset>
+</div>
+<div ng-hide="loaded">
+   <h1 class="title">Loading...</h1>
+   <p>Please wait while outlet details are loaded.</p>
+</div>

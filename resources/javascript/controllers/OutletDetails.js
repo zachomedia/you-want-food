@@ -50,12 +50,48 @@ angular
         }
 
         $scope.today = new Date();
-        $scope.isToday = function(weekday) {
-            return $scope.today.getDay() == weekday;
+        $scope.isToday = function(strDate) {
+            if (strDate === parseInt(strDate)) {
+                return ($scope.today.getDay() == strDate);
+            } else {
+                var date = new Date(strDate);
+                date.setDate(date.getDate() + 1);
+                var today = $scope.today;
+
+                date.setHours(0);
+                date.setMinutes(0);
+                date.setSeconds(0);
+                date.setMilliseconds(0);
+                today.setHours(0);
+                today.setMinutes(0);
+                today.setSeconds(0);
+                today.setMilliseconds(0);
+
+                var response = date - today == 0;
+                if (response) $scope.special = true;
+                return response;
+            }
+        }
+        $scope.inPast = function(strDate) {
+            var date = new Date(strDate);
+            date.setDate(date.getDate() + 1);
+            var today = $scope.today;
+
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+            today.setMilliseconds(0);
+
+            return date < today;
         }
 
         YouWantFoodAPI.outlet($routeParams.outletId).then(function(outlet) {
             $scope.outlet = outlet;
+            $scope.loaded = true;
 
             // Load the menu
             YouWantFoodAPI.menu($scope.outlet.outlet_id).get(function(menu) {

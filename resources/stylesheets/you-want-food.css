@@ -22,6 +22,10 @@
    THE SOFTWARE.
 */
 
+a {
+    cursor: pointer;
+}
+
 .detail ul, .detail li {
    list-style: none !important;
    margin: 0 !important;
@@ -117,7 +121,15 @@
    padding-left: 5px !important;
 }
 
-.outlet-hours table .today {
+.outlet-hours h3 {
+    text-align: center;
+}
+
+.outlet-hours li {
+    padding: 8px !important;
+}
+
+.today {
    background: #f3f3f3;
 }
 

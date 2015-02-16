@@ -24,11 +24,24 @@
 
 angular
    .module('YouWantFood')
-   .filter('toJSDate', function() {
-      return function(strDate) {
-         if (strDate == null) return undefined;
-         var date = new Date(strDate);
-         date.setDate(date.getDate() + 1);
-         return date;
+   .filter('time', function() {
+      return function(strTime) {
+         if (strTime == null) return undefined;
+         var components = strTime.split(":");
+
+         var hour = parseInt(components[0]);
+         var minute = components[1];
+         var ampm = "am";
+
+         if (hour == 0) hour = 12;
+         else if (hour == 12) {
+            ampm = "pm";
+         }
+         else if (hour > 12) {
+            hour -= 12;
+            ampm = "pm";
+         }
+
+         return hour + ":" + minute + " " + ampm;
       }
    });
