@@ -53,6 +53,7 @@ function getOutletById($id, $outlets)
 // generateMenuHTML($menu) Generates the HTML for the $menu.
 function generateMenuHTML($outlets, $menu)
 {
+   $APP_BASE = APP_BASE;
    $today = date('l, F jS, Y');
    $html = <<<EOM
 
@@ -61,12 +62,12 @@ function generateMenuHTML($outlets, $menu)
    <div id="header" style="padding: 10px; text-align: center;">
       <h1>You Want Food &mdash; Today's Menu</h1>
       <p>$today</p>
-      <p><a href="https://zacharyseguin.ca/projects/you-want-food/" style="text-decoration: none; color: #aa0000; padding: 10px;">Visit You Want Food</a></p>
+      <p><a href="${APP_BASE}" style="text-decoration: none; color: #aa0000; padding: 10px;">Visit You Want Food</a></p>
    </div>
 
    <div id="new-features" style="font-size: 0.9em; margin: 10px; padding: 10px;">
       <h2>New Features</h2>
-      <p>You Want Food development continues, today launching a set of new features:</p>
+      <p>You Want Food development continues:</p>
 
       <div style="margin: 10px;">
          <h3>Region of Waterloo Public Health Inspection Results</h3>
@@ -75,8 +76,14 @@ function generateMenuHTML($outlets, $menu)
       </div>
 
       <div style="margin: 10px;">
+         <h3>Outlet Reviews</h3>
+         <p>Share your experience at the various food outlets on campus by writing a review.</p>
+         <p>View an outlet's details and select the "Reviews" tab.</p>
+      </div>
+
+      <div style="margin: 10px;">
          <h3>Updated Menu Email</h3>
-         <p>The daily menu email has been given a new look. Don't hesitate to pass any feedback to <a href="mailto:you-want-food@zacharyseguin.ca">you-want-food@zacharyseguin.ca</a>.</p>
+         <p>The daily menu email has been given a new look. Don't hesitate to pass any feedback to <a href="mailto:youwantfood@zacharyseguin.ca">youwantfood@zacharyseguin.ca</a>.</p>
       </div>
    </div>
 
@@ -96,7 +103,7 @@ foreach ($menu as $outlet)
       <div style=" background: #f4f4f4; padding: 10px; margin: 10px; border: 1px solid #eee; border-left: 6px solid #eee;">
 
          <h2>{$outlet['outlet']}</h2>
-         <p style="font-size: 0.9em">$hours_string | <a href="https://zacharyseguin.ca/projects/you-want-food/outlet/{$outlet['outlet_id']}" style="color: #aa0000;">Outlet Details</a></p>
+         <p style="font-size: 0.9em">$hours_string | <a href="{$APP_BASE}outlet/{$outlet['outlet_id']}" style="color: #aa0000;">Outlet Details</a></p>
          <p style="font-weight: bold">{$outlet_details['notice']}</p>
 
 EOM;
@@ -137,8 +144,8 @@ EOM;
 }// End of foreach
 
    $html .= <<<EOM
-      <p style='padding-top: 10px; margin-bottom: 0px; color: #888; font-size: .8em; text-align: center;'>You are receiving this email because this email address was subscribed at <a href='https://zacharyseguin.ca/projects/you-want-food/' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/</a>.</p>
-      <p style='margin-top: 3px; color: #888; font-size: .8em; text-align: center;'>To stop receiving these emails, please visit <a href='https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe' style='color: #888;'>https://zacharyseguin.ca/projects/you-want-food/email/unsubscribe</a>.</p>
+      <p style='padding-top: 10px; margin-bottom: 0px; color: #888; font-size: .8em; text-align: center;'>You are receiving this email because this email address was subscribed at <a href='$APP_BASE' style='color: #888;'>$APP_BASE</a>.</p>
+      <p style='margin-top: 3px; color: #888; font-size: .8em; text-align: center;'>To stop receiving these emails, please visit <a href='${APP_BASE}email/unsubscribe' style='color: #888;'>${APP_BASE}email/unsubscribe</a>.</p>
 </div>
 EOM;
 
@@ -195,9 +202,10 @@ if (!$info_found)
     die('No menu information for today.');
 
 $menu_html = generateMenuHTML($outlets, $today_menu);
+$APP_BASE = APP_BASE;
 
 foreach ($subscribers as $s)
 {
-   if (!$email->sendEmail($s['email'], "You Want Food - Today's Menu", $menu_html, "Sorry, menu is only available in HTML format. Visit https://zacharyseguin.ca/proejcts/you-want-food/ for menu information."))
+   if (!$email->sendEmail($s['email'], "You Want Food - Today's Menu", $menu_html, "Sorry, menu is only available in HTML format. Visit {$APP_BASE} for menu information."))
       echo "Failed to send email to: " . $s['email'] . "\n";
 }// End of foreach
