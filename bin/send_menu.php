@@ -65,30 +65,6 @@ function generateMenuHTML($outlets, $menu)
       <p><a href="${APP_BASE}" style="text-decoration: none; color: #aa0000; padding: 10px;">Visit You Want Food</a></p>
    </div>
 
-   <div id="new-features" style="font-size: 0.9em; margin: 10px; padding: 10px;">
-      <h2>New Features</h2>
-      <p>You Want Food development continues:</p>
-
-      <div style="margin: 10px;">
-         <h3>Region of Waterloo Public Health Inspection Results</h3>
-         <p>The You Want Food web application now displays results from inspections by the Region of Waterloo Public Health.</p>
-         <p>To view inspection results, view an outlet's details and select the "Public Health Inspections" tab.</p>
-      </div>
-
-      <div style="margin: 10px;">
-         <h3>Outlet Reviews</h3>
-         <p>Share your experience at the various food outlets on campus by writing a review.</p>
-         <p>View an outlet's details and select the "Reviews" tab.</p>
-      </div>
-
-      <div style="margin: 10px;">
-         <h3>Updated Menu Email</h3>
-         <p>The daily menu email has been given a new look. Don't hesitate to pass any feedback to <a href="mailto:youwantfood@zacharyseguin.ca">youwantfood@zacharyseguin.ca</a>.</p>
-      </div>
-   </div>
-
-   <hr>
-
 EOM;
 
 foreach ($menu as $outlet)
