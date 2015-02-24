@@ -24,7 +24,7 @@
 
 angular
     .module('YouWantFood')
-    .controller('Outlets', function($scope, YouWantFoodAPI, $routeParams) {
+    .controller('Outlets', function($sce, $scope, YouWantFoodAPI, $routeParams) {
         $scope.outlets = YouWantFoodAPI.outlets().query();
 
         $scope.isSelectedOutlet = function(outletId) {
