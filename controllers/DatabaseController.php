@@ -32,7 +32,7 @@ class DatabaseController
 
    public function __construct($hostname, $port, $db, $user, $password)
    {
-      $this->conn = new \PDO("mysql:host=$hostname;port=$port;dbname=$db;charset=utf8", $user, $password, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+      $this->conn = new \PDO("pgsql:host=$hostname;port=$port;dbname=$db", $user, $password);
       $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
    }// End of constructor method
 
@@ -255,12 +255,12 @@ class DatabaseController
          'id' => $id,
          'facility_id' => $facility_id,
          'inspection_date' => $inspection_date,
-         'require_reinspection' => $require_reinspection,
-         'certified_food_handler' => $certified_food_handler,
+         'require_reinspection' => ($require_reinspection) ? true : '0',
+         'certified_food_handler' => ($certified_food_handler) ? true : '0',
          'inspection_type' => $inspection_type,
-         'charge_revoked' => $charge_revoked,
+         'charge_revoked' => ($charge_revoked) ? true : '0',
          'actions' => utf8_encode($actions),
-         'charge_date' => $charge_date
+         'charge_date' => ($charge_date == '') ? null : $charge_date
       ));
    }// End of addInspectionsInspections method
 
