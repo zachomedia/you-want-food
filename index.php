@@ -27,6 +27,8 @@ namespace ZacharySeguin\YouWantFood;
 require_once(__DIR__ . '/vendor/autoload.php');
 require_once(__DIR__ . '/config.php');
 
+use Symfony\Component\HttpFoundation\Response;
+
 $app = new \Silex\Application();
 $app['debug'] = false;
 $app->register(new \Silex\Provider\ServiceControllerServiceProvider());
@@ -108,7 +110,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
    if ($code == 404) {
       return $app->redirect($app['url_generator']->generate('/not-found'));
    } else {
-      return $app->redirect($app['url_generator']->generate('/error'));
+      return new Response('Sorry, an error occurred.', $code);// $app->redirect($app['url_generator']->generate('/error'));
    }// End of if
 });
 
