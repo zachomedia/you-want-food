@@ -30,35 +30,35 @@ angular
         'ui.bootstrap'
     ])
     .config(['$sceDelegateProvider', '$routeProvider', '$locationProvider', function($sceDelegateProvider, $routeProvider, $locationProvider) {
-        $sceDelegateProvider.resourceUrlWhitelist(['https://zacharyseguin.ca/**', 'https://static.zacharyseguin.ca/**']);
+        $sceDelegateProvider.resourceUrlWhitelist(['https://projects.zacharyseguin.ca/**']);
         $routeProvider
             .when('/', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/Home.html',
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/Home.html',
                 controller: 'Home'
             })
             .when('/outlet/:outletId', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/OutletDetails.html',
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/OutletDetails.html',
                 controller: 'OutletDetails'
             })
             .when('/email/subscribe', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/EmailSubscribe.html',
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/EmailSubscribe.html',
                 controller: 'EmailSubscribe'
             })
             .when('/email/unsubscribe', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/EmailUnsubscribe.html',
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/EmailUnsubscribe.html',
                 controller: 'EmailUnsubscribe'
             })
             .when('/email/confirmed', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/EmailConfirmed.html'
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/EmailConfirmed.html'
             })
             .when('/email/confirmation-error', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/EmailConfirmationError.html'
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/EmailConfirmationError.html'
             })
             .when('/error', {
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/Error.html'
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/Error.html'
             })
             .otherwise({
-                templateUrl: 'https://static.zacharyseguin.ca/projects/you-want-food/views/NotFound.html'
+                templateUrl: 'https://projects.zacharyseguin.ca/you-want-food/views/NotFound.html'
             });
          $locationProvider.html5Mode(true);
     }]);
