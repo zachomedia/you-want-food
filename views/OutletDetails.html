@@ -40,7 +40,7 @@
           <div>
              <h3>Special Hours</h3>
              <ul>
-                <li ng-repeat="date in outlet.special_hours" ng-hide="inPast(date.date)" ng-class="{today: isToday(date.date)}">
+                <li ng-repeat="date in outlet.special_hours | orderBy:'date.date'" ng-hide="inPast(date.date)" ng-class="{today: isToday(date.date)}">
                    <b>{{date.date | toJSDate | date:'fullDate'}}</b><br />{{date.opening_hour | time}} - {{date.closing_hour | time}}
                 </li>
              </ul>
@@ -48,7 +48,7 @@
           <div>
              <h3>Dates Closed</h3>
              <ul>
-                <li ng-repeat="date in outlet.dates_closed" ng-hide="inPast(date)" ng-class="{today: isToday(date)}">{{date | toJSDate | date:'fullDate'}}</li>
+                <li ng-repeat="date in outlet.dates_closed | orderBy" ng-hide="inPast(date)" ng-class="{today: isToday(date)}">{{date | toJSDate | date:'fullDate'}}</li>
              </ul>
           </div>
         </section>
