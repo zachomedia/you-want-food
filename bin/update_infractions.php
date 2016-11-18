@@ -58,7 +58,7 @@ $inspections = $csv->data;
 
 foreach ($inspections as $i)
 {
-   $db->addInspectionsInspections($i['INSPECTION_ID'], $i['FACILITYID'], $i['INSPECTION_DATE'], $i['REQUIRE_REINSPECTION'] === "Y", $i['CERTIFIED_FOOD_HANDLER'] === "Yes", $i['INSPECTION_TYPE'], $i['CHARGE_REVOCKED'], $i['Actions'], $i['CHARGE_DATE']);
+   $db->addInspectionsInspections($i['INSPECTION_ID'], $i['FACILITYID'], $i['INSPECTION_DATE'], $i['REQUIRE_REINSPECTION'] === "Y", $i['CERTIFIED_FOOD_HANDLER'] === "Yes", $i['INSPECTION_TYPE']);
 }// End of for
 
 $csv = new \parseCSV(DATA_PATH . '/Infractions_OpenData.csv');
@@ -67,5 +67,5 @@ $infractions = $csv->data;
 
 foreach ($infractions as $i)
 {
-   $db->addInspectionsInfraction($i['INFRACTION_ID'], $i['INSPECTION_ID'], $i['INFRACTION_TYPE'], $i['category_code'], $i['letter_code'], $i['Description1'], $i['InspectionDate'], $i['ChargeDetails']);
+   $db->addInspectionsInfraction($i['INFRACTION_ID'], $i['INSPECTION_ID'], $i['INFRACTION_TYPE'], $i['Infraction'], $i['Result'], $i['Comment'], $i['InspectionDate']);
 }// End of for

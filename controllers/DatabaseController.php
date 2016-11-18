@@ -240,16 +240,16 @@ class DatabaseController
       ));
    }// End of addInspectionsFacility method
 
-   public function addInspectionsInspections($id, $facility_id, $inspection_date, $require_reinspection, $certified_food_handler, $inspection_type, $charge_revoked, $actions, $charge_date)
+   public function addInspectionsInspections($id, $facility_id, $inspection_date, $require_reinspection, $certified_food_handler, $inspection_type)
    {
       $stmt = $this->conn->prepare('SELECT id FROM inspections_inspections WHERE id=:id');
       $stmt->execute(array('id' => $id));
       $results = $stmt->fetchAll();
 
       if (count($results) == 0)
-         $stmt = $this->conn->prepare('INSERT INTO inspections_inspections (id, facility_id, inspection_date, require_reinspection, certified_food_handler, inspection_type, actions, charge_revoked, charge_date) VALUES (:id, :facility_id, :inspection_date, :require_reinspection, :certified_food_handler, :inspection_type, :actions, :charge_revoked, :charge_date)');
+         $stmt = $this->conn->prepare('INSERT INTO inspections_inspections (id, facility_id, inspection_date, require_reinspection, certified_food_handler, inspection_type) VALUES (:id, :facility_id, :inspection_date, :require_reinspection, :certified_food_handler, :inspection_type)');
       else
-         $stmt = $this->conn->prepare('UPDATE inspections_inspections SET facility_id = :facility_id, inspection_date = :inspection_date, require_reinspection = :require_reinspection, certified_food_handler = :certified_food_handler, inspection_type = :inspection_type, actions = :actions, charge_revoked = :charge_revoked, charge_date = :charge_date WHERE id = :id');
+         $stmt = $this->conn->prepare('UPDATE inspections_inspections SET facility_id = :facility_id, inspection_date = :inspection_date, require_reinspection = :require_reinspection, certified_food_handler = :certified_food_handler, inspection_type = :inspection_type WHERE id = :id');
 
       return $stmt->execute(array(
          'id' => $id,
@@ -257,33 +257,29 @@ class DatabaseController
          'inspection_date' => $inspection_date,
          'require_reinspection' => ($require_reinspection) ? true : '0',
          'certified_food_handler' => ($certified_food_handler) ? true : '0',
-         'inspection_type' => $inspection_type,
-         'charge_revoked' => ($charge_revoked) ? true : '0',
-         'actions' => utf8_encode($actions),
-         'charge_date' => ($charge_date == '') ? null : $charge_date
+         'inspection_type' => $inspection_type
       ));
    }// End of addInspectionsInspections method
 
-   public function addInspectionsInfraction($id, $inspection_id, $type, $category_code, $letter_code, $description, $inspection_date, $charge_details)
+   public function addInspectionsInfraction($id, $inspection_id, $type, $infraction, $result, $comment, $inspection_date)
    {
       $stmt = $this->conn->prepare('SELECT id FROM inspections_infractions WHERE id=:id');
       $stmt->execute(array('id' => $id));
       $results = $stmt->fetchAll();
 
       if (count($results) == 0)
-         $stmt = $this->conn->prepare('INSERT INTO inspections_infractions (id, inspection_id, type, category_code, letter_code, description, inspection_date, charge_details) VALUES (:id, :inspection_id, :type, :category_code, :letter_code, :description, :inspection_date, :charge_details)');
+         $stmt = $this->conn->prepare('INSERT INTO inspections_infractions (id, inspection_id, type, category_code, letter_code, description, inspection_date) VALUES (:id, :inspection_id, :type, :category_code, :letter_code, :description, :inspection_date)');
       else
-         $stmt = $this->conn->prepare('UPDATE inspections_infractions SET inspection_id = :inspection_id, type = :type, category_code = :category_code, letter_code = :letter_code, description = :description, inspection_date = :inspection_date, charge_details = :charge_details WHERE id = :id');
+         $stmt = $this->conn->prepare('UPDATE inspections_infractions SET inspection_id = :inspection_id, type = :type, category_code = :category_code, letter_code = :letter_code, description = :description, inspection_date = :inspection_date WHERE id = :id');
 
       return $stmt->execute(array(
          'id' => $id,
          'inspection_id' => $inspection_id,
          'type' => $type,
-         'category_code' => utf8_encode($category_code),
-         'letter_code' => utf8_encode($letter_code),
-         'description' => utf8_encode($description),
-         'inspection_date' => $inspection_date,
-         'charge_details' => utf8_encode($charge_details)
+         'category_code' => utf8_encode($infraction),
+         'letter_code' => utf8_encode($result),
+         'description' => utf8_encode($comment),
+         'inspection_date' => $inspection_date
       ));
    }// End of addInspectionInfraction method
 }// End of DatabaseController method
